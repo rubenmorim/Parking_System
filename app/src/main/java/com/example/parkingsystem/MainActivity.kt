@@ -5,10 +5,13 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.location.*
+import android.location.Address
 import android.location.Location
 import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
@@ -16,7 +19,6 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
-import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -27,10 +29,12 @@ import com.google.android.gms.maps.model.*
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.Main
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import java.io.IOException
 import kotlinx.coroutines.launch
+import okhttp3.*
+import org.json.JSONArray
+import org.json.JSONTokener
+import java.io.IOException
+
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback, LocationListener,
     GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, GoogleMap.OnInfoWindowClickListener {
@@ -41,15 +45,25 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, LocationListener,
     private lateinit var locationManager: LocationManager
     private val locationPermissionCode = 111
     private lateinit var locationAtual : Location
+    private val hander = Handler()
+
+    val nome: Array<String?> = arrayOfNulls(17)
+    val morada: Array<String?> = arrayOfNulls(17)
+    val latitude: Array<Double?> = arrayOfNulls(17)
+    val longitude: Array<Double?> = arrayOfNulls(17)
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        run("http://192.168.1.78:3000/api/parques/allParques")
+
+
 
         getLocation();
         val mapFragment = supportFragmentManager.findFragmentById(R.id.myMap) as SupportMapFragment
         mapFragment.getMapAsync(this)
+
 
         val btnsearch = findViewById<Button>(R.id.proc)
         btnsearch.setOnClickListener {
@@ -74,6 +88,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, LocationListener,
             }
         }
     }
+
 
     private fun getLocation() {
         locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
@@ -175,9 +190,12 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, LocationListener,
 
         //Adicionar Parques
         val location = LatLng(41.691, -8.831)
-        mMap!!.addMarker(MarkerOptions().position(location).title("Teste0").snippet("Maisdfsdsds \n fsdds" ))
-        val location1 = LatLng(41.692, -8.832)
-        mMap!!.addMarker(MarkerOptions().position(location1).title("Teste1"))
+        //Log.i("X", nome[10]!!)
+        //mMap!!.addMarker(MarkerOptions().position(location).title(nome[10]).snippet(morada[10]))
+        //val location1 = LatLng(41.692, -8.832)
+        //mMap!!.addMarker(MarkerOptions().position(location1).title("Teste1"))
+
+
 
         mMap!!.setOnInfoWindowClickListener(this)
 
@@ -255,9 +273,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, LocationListener,
         val rl : RelativeLayout = findViewById(R.id.rl)
         rl.visibility = View.VISIBLE
         val tv1 : TextView = findViewById(R.id.tv1)
-        tv1.setText("Nome: Parque da Feira")
+        tv1.setText(p0.title)
         val tv2 : TextView = findViewById(R.id.tv2)
-        tv2.setText("Morada: Rua 20 de Janeiro - Viana do Castelo. Lat: " + lat + " Long: " + lng)
+        tv2.setText(p0.snippet + " " + lat + " " + lng)
         val btn_rota = findViewById<Button>(R.id.btnrota)
         btn_rota.setOnClickListener {
             val location1 = LatLng(lat, lng)
@@ -274,4 +292,50 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, LocationListener,
     }
 
     fun reservar(view: View) {}
-}
+
+
+    fun run(url: String) {
+
+                val client = OkHttpClient()
+
+                val request = Request.Builder()
+                    .url(url)
+                    .build()
+
+                client.newCall(request).enqueue(object : Callback {
+                    override fun onFailure(call: Call, e: IOException) {
+                        Log.i("Falha", e.toString())
+                    }
+                    override fun onResponse(call: Call, response: Response) {
+
+                        val json= response.body?.string()
+
+                        val jsonArray = JSONTokener(json).nextValue() as JSONArray
+
+                            for (i in 0 until jsonArray.length()) {
+
+                                val x = jsonArray.getJSONObject(i).getString("nomeParque")
+                                val y = jsonArray.getJSONObject(i).getString("morada")
+                                val lat = jsonArray.getJSONObject(i).getString("latitude").toDouble()
+                                val lng = jsonArray.getJSONObject(i).getString("longitude").toDouble()
+
+                        hander.post(Runnable() {
+                            mMap!!.addMarker(MarkerOptions().position(LatLng(lat, lng)).title(x).snippet(y))
+                        })
+
+
+                        }
+                        }
+
+
+                } )
+        }
+
+        }
+
+
+
+
+
+
+
