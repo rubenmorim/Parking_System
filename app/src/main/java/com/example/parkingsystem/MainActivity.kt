@@ -47,12 +47,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, LocationListener,
     private lateinit var locationAtual : Location
     private val hander = Handler()
 
-    val nome: Array<String?> = arrayOfNulls(17)
-    val morada: Array<String?> = arrayOfNulls(17)
-    val latitude: Array<Double?> = arrayOfNulls(17)
-    val longitude: Array<Double?> = arrayOfNulls(17)
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -188,15 +182,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, LocationListener,
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap;
 
-        //Adicionar Parques
-        val location = LatLng(41.691, -8.831)
-        //Log.i("X", nome[10]!!)
-        //mMap!!.addMarker(MarkerOptions().position(location).title(nome[10]).snippet(morada[10]))
-        //val location1 = LatLng(41.692, -8.832)
-        //mMap!!.addMarker(MarkerOptions().position(location1).title("Teste1"))
-
-
-
         mMap!!.setOnInfoWindowClickListener(this)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
@@ -279,7 +264,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, LocationListener,
         val btn_rota = findViewById<Button>(R.id.btnrota)
         btn_rota.setOnClickListener {
             val location1 = LatLng(lat, lng)
-            //val location = LatLng(41.55, -8.423)
             mMap!!.addMarker(MarkerOptions().position(LatLng(locationAtual.latitude, locationAtual.longitude)).title("XXXX").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)))
             mMap!!.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(locationAtual.latitude, locationAtual.longitude), 15f))
             val URL = getDirectionURL(LatLng(locationAtual.latitude, locationAtual.longitude), location1)
@@ -319,19 +303,15 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, LocationListener,
                                 val lat = jsonArray.getJSONObject(i).getString("latitude").toDouble()
                                 val lng = jsonArray.getJSONObject(i).getString("longitude").toDouble()
 
-                        hander.post(Runnable() {
-                            mMap!!.addMarker(MarkerOptions().position(LatLng(lat, lng)).title(x).snippet(y))
-                        })
-
-
-                        }
-                        }
-
-
+                                hander.post(Runnable() {
+                                    mMap!!.addMarker(MarkerOptions().position(LatLng(lat, lng)).title(x).snippet(y))
+                                })
+                            }
+                    }
                 } )
-        }
+    }
 
-        }
+}
 
 
 
