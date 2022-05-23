@@ -2,4 +2,9 @@
     <string name="app_name">Parking System</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="change_current_vehicle">Change current vehicle</string>
+    <string name="add_vehicle">Add vehicle</string>
+    <string name="payments">Payments</string>
+    <string name="no_vehicles_configured_yet">No vehicles configured yet</string>
+    <string name="please_add_a_vehicle_in_order_to_use_the_app">Please add a vehicle in order to use the app.</string>
 </resources>

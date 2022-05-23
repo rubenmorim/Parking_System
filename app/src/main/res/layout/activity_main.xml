@@ -6,11 +6,42 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+
+    <LinearLayout
+        android:id="@+id/linearLayoutTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="23dp"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/textViewLinearLayoutTitle"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ActivityTitle"
+            android:textSize="26sp">
+
+        </TextView>
+
+        <ImageView
+            android:id="@+id/imageViewLinearLayoutTitle"
+            android:layout_weight="1"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_user_solid">
+
+        </ImageView>
+
+    </LinearLayout>
+
     <FrameLayout
         android:id="@+id/frameLayoutFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/mainNavigationMenu">
+        android:layout_above="@+id/mainNavigationMenu"
+        android:layout_below="@+id/linearLayoutTitle">
 
 
     </FrameLayout>
@@ -19,12 +50,13 @@
         android:id="@+id/mainNavigationMenu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
         android:layout_alignParentBottom="true">
 
         <ImageButton
             android:id="@+id/buttonRedirectHome"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:src="@drawable/ic_house_solid"
             android:adjustViewBounds="true"
             android:backgroundTint="#00FFFFFF"
@@ -36,8 +68,8 @@
 
         <ImageButton
             android:id="@+id/buttonRedirectQrCode"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_weight="1"
             android:adjustViewBounds="true"
             android:backgroundTint="#00FFFFFF"
@@ -48,8 +80,8 @@
         </ImageButton>
         <ImageButton
             android:id="@+id/buttonRedirectUser"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:src="@drawable/ic_user_solid"
             android:adjustViewBounds="true"
             android:backgroundTint="#00FFFFFF"
@@ -60,8 +92,8 @@
         </ImageButton>
         <ImageButton
             android:id="@+id/buttonRedirectGear"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:src="@drawable/ic_gear_solid"
             android:adjustViewBounds="true"
             android:backgroundTint="#00FFFFFF"

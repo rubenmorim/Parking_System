@@ -1,14 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragment.QrCodeFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Fragmento de QR COde" />
+        android:layout_height="match_parent">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/qrCodeCardView"
+            android:layout_gravity="center"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            card_view:cardCornerRadius="5dp"
+            android:layout_margin="32dp"
+            android:layout_centerHorizontal="true">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="32dp">
+
+                <TextView
+                    android:id="@+id/textViewLicencePlate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/no_vehicles_configured_yet"
+                    android:textAlignment="center"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/textViewInfo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/textViewLicencePlate"
+                    android:layout_marginBottom="32dp"
+                    android:text="@string/please_add_a_vehicle_in_order_to_use_the_app"
+                    android:textAlignment="center">
+
+                </TextView>
+                <ImageView
+                    android:id="@+id/qrCodeImageView"
+                    android:layout_below="@id/textViewInfo"
+                    android:layout_width="300dp"
+                    android:layout_height="300dp"
+                    android:padding="16dp"
+                    android:src="@drawable/ic_car_not_found" />
+            </RelativeLayout>
+
+
+        </androidx.cardview.widget.CardView>
+
+        <Button
+            android:id="@+id/buttonChangeCurrentVehicle"
+            android:layout_below="@id/qrCodeCardView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="@string/change_current_vehicle">
+        </Button>
+        <Button
+            android:id="@+id/buttonAddVehicle"
+            android:layout_below="@id/buttonChangeCurrentVehicle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="@string/add_vehicle">
+        </Button>
+        <Button
+            android:id="@+id/buttonPayments"
+            android:layout_below="@id/buttonAddVehicle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="@string/payments">
+        </Button>
+
+    </RelativeLayout>
+
+
 
 </FrameLayout>
