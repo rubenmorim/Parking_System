@@ -7,4 +7,6 @@
     <string name="payments">Payments</string>
     <string name="no_vehicles_configured_yet">No vehicles configured yet</string>
     <string name="please_add_a_vehicle_in_order_to_use_the_app">Please add a vehicle in order to use the app.</string>
+    
+    <string name="title_activity_maps">Map</string>
 </resources>

@@ -3,7 +3,6 @@
 
 #How to Work with git 
 
-
 - Para começar uma branch apartir da branch developer
   git checkout -b nomedafeature developer
 

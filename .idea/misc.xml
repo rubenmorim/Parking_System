@@ -5,6 +5,7 @@
       <map>
         <entry key="app/src/main/res/layout/activity_capture_qrcode.xml" value="0.1875" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.1875" />
+        <entry key="app/src/main/res/layout/activity_maps.xml" value="0.36354166666666665" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_qr_code.xml" value="0.1875" />
       </map>
