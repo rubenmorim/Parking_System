@@ -58,7 +58,7 @@ GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
         savedInstanceState: Bundle?
     ): View? {
 
-        // run("http://192.168.1.78:3000/api/parques/allParques")
+        run("http://192.168.1.78:3000/api/parques/allParques")
 
         // Inflate the layout for this fragment
         val v: View = inflater.inflate(R.layout.fragment_home, container, false)

@@ -10,20 +10,35 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.parkingsystem.R
+import com.example.parkingsystem.api.ServiceBuilder
+import com.example.parkingsystem.api.matricula.MatriculaEndpoint
+import com.example.parkingsystem.model.Matricula
+import com.example.parkingsystem.model.Utilizador
+import com.example.parkingsystem.model.post.UtilizadorPost
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.WriterException
 import com.google.zxing.qrcode.QRCodeWriter
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody.Companion.toRequestBody
+import org.json.JSONObject
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 
 class QrCodeFragment : Fragment() {
 
     private lateinit var ivQRCode: ImageView
     private lateinit var buttonChangeCurrentVehicle: Button
+    private var idUtilizador: Long = 1654173834566
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+
     }
 
     override fun onCreateView(
@@ -38,6 +53,8 @@ class QrCodeFragment : Fragment() {
         button.setOnClickListener {
             this.changeLicencePlate(v);
         }
+        getMatriculaUtilizador(idUtilizador)
+
         return v
     }
 
@@ -105,5 +122,35 @@ class QrCodeFragment : Fragment() {
 
         // show the alert dialog when the button is clicked
         customAlertDialog.show()
+    }
+
+    private fun getMatriculaUtilizador(idUtilizador: Long) {
+        val request = ServiceBuilder.buildService(MatriculaEndpoint::class.java)
+
+        val jsonObject = JSONObject()
+        jsonObject.put("idUtilizador", idUtilizador)
+
+        // Convert JSONObject to String
+        val jsonObjectString = jsonObject.toString()
+        val requestBody = jsonObjectString.toRequestBody("application/json".toMediaTypeOrNull())
+        val utilizador = UtilizadorPost(idUtilizador)
+
+        request.getMatriculaUtilizador(utilizador).enqueue(object : Callback<List<Matricula>> {
+            override fun onResponse(call: Call<List<Matricula>>, response: Response<List<Matricula>>) {
+                if (response.isSuccessful){
+                    val matriculaList: List<Matricula> = response.body()!!
+
+                    for (matricula in matriculaList) {
+                        Toast.makeText(requireContext(), matricula.nomeCarro + " - " + matricula.matricula, Toast.LENGTH_SHORT).show()
+                    }
+
+                } else {
+                    Toast.makeText(requireContext(), response.errorBody().toString(), Toast.LENGTH_SHORT).show()
+                }
+            }
+            override fun onFailure(call: Call<List<Matricula>>, t: Throwable) {
+                Toast.makeText(requireContext(), "${t.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 }
