@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import android.graphics.Color
 import android.location.*
 import android.location.Address
+import android.location.LocationListener
 import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
@@ -27,8 +28,8 @@ import com.example.parkingsystem.model.Matricula
 import com.example.parkingsystem.model.Parque
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
+import com.google.android.gms.location.*
 import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -46,19 +47,60 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class HomeFragment : Fragment(), OnMapReadyCallback, LocationListener,
-GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, GoogleMap.OnInfoWindowClickListener {
+class HomeFragment : Fragment(), OnMapReadyCallback, LocationListener, GoogleMap.OnInfoWindowClickListener {
 
     private var mMap: GoogleMap? = null
-    private var mGoogleApiClient: GoogleApiClient? = null
-    private lateinit var mLocationRequest: LocationRequest
-    private lateinit var locationManager: LocationManager
-    private val locationPermissionCode = 111
-    private lateinit var locationAtual : Location
     private val hander = Handler()
+
+    private lateinit var lastLocation: Location
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+
+    private lateinit var locationCallback: LocationCallback
+    private lateinit var locationRequest: com.google.android.gms.location.LocationRequest
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
+
+        locationCallback = object : LocationCallback() {
+            override fun onLocationResult(p0: LocationResult) {
+                Log.d("**** SARA", p0.toString())
+                super.onLocationResult(p0)
+                lastLocation = p0.lastLocation
+                Log.d("**** SARA", lastLocation.toString())
+                var loc = LatLng(lastLocation.latitude, lastLocation.longitude)
+                mMap!!.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 15.0f))
+            }
+        }
+
+        createLocationRequest()
+    }
+
+    companion object {
+        private const val LOCATION_PERMISSION_REQUEST_CODE = 1
+        private const val REQUEST_CHECK_SETTINGS = 2
+    }
+
+
+    private fun startLocationUpdates() {
+        if (ActivityCompat.checkSelfPermission(requireContext(),
+                android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(requireActivity(),
+                arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),
+                LOCATION_PERMISSION_REQUEST_CODE)
+            return
+        }
+        fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null /* Looper */)
+    }
+
+    private fun createLocationRequest() {
+        locationRequest = com.google.android.gms.location.LocationRequest()
+        // interval specifies the rate at which your app will like to receive updates.
+        locationRequest.interval = 60000
+        locationRequest.priority = com.google.android.gms.location.LocationRequest.PRIORITY_HIGH_ACCURACY
     }
 
     override fun onCreateView(
@@ -88,7 +130,6 @@ GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
 
         // Inflate the layout for this fragment
         val v: View = inflater.inflate(R.layout.fragment_home, container, false)
-        getLocation();
 
         val btnsearch = v.findViewById<Button>(R.id.proc)
 
@@ -130,33 +171,15 @@ GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
 
         super.onViewCreated(view, savedInstanceState)
     }
-    private fun getLocation() {
 
-        /**
-        Why that one extra method call - requireActivity()?
-        the getSystemService() method that provides access to system services comes from Context.
-        An Activity extends Context, a Fragment does not. Hence, you first need to get a reference
-        to the Activity in which the Fragment is contained and then magically retrieve the system
-        service you want.
-         */
-        locationManager = requireActivity().getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        if(ActivityCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-            && ActivityCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED)
-        {
-            ActivityCompat.requestPermissions(
-                requireActivity(),
-                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                locationPermissionCode
-            )
-        } else {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5f, this)
-        }
+    override fun onResume() {
+        super.onResume()
+        startLocationUpdates()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        fusedLocationClient.removeLocationUpdates(locationCallback)
     }
 
 
@@ -238,73 +261,6 @@ GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
 
         mMap!!.setOnInfoWindowClickListener(this)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-            if (ContextCompat.checkSelfPermission(
-                    requireContext(),
-                    Manifest.permission.ACCESS_FINE_LOCATION
-                ) == PackageManager.PERMISSION_GRANTED
-            ){
-                buildGoogleApiClient()
-                mMap!!.isMyLocationEnabled = true
-            }
-        } else {
-            buildGoogleApiClient()
-            mMap!!.isMyLocationEnabled = true
-        }
-    }
-
-    protected fun buildGoogleApiClient(){
-        mGoogleApiClient = GoogleApiClient.Builder(requireContext())
-            .addConnectionCallbacks(this)
-            .addOnConnectionFailedListener(this)
-            .addApi(LocationServices.API).build()
-        mGoogleApiClient!!.connect()
-    }
-
-    override fun onLocationChanged(location: Location) {
-        locationAtual = location
-        moveCamera(LatLng(location.latitude,location.longitude), 15f, "My Location")
-        if (ActivityCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            return
-        }
-        this.mMap!!.isMyLocationEnabled = true
-
-    }
-
-    private fun moveCamera(latlng : LatLng, zoom : Float, title : String){
-        CoroutineScope(Main).launch {
-            mMap!!.moveCamera(CameraUpdateFactory.newLatLngZoom(latlng, zoom))
-            if (!title.equals("My Location")) mMap!!.addMarker(MarkerOptions().position(latlng).title(title))
-        }
-    }
-
-    override fun onConnected(p0: Bundle?) {
-        mLocationRequest = LocationRequest()
-        mLocationRequest.interval = 1000
-        mLocationRequest.fastestInterval = 1000
-        mLocationRequest.priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
-        if (ContextCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED
-        ){
-            LocationServices.getFusedLocationProviderClient(requireContext())
-        }
-    }
-
-    override fun onConnectionSuspended(p0: Int) {
-
-    }
-
-    override fun onConnectionFailed(p0: ConnectionResult) {
-
     }
 
     override fun onInfoWindowClick(p0: Marker) {
@@ -322,10 +278,10 @@ GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
         btn_rota.setOnClickListener {
             val location1 = LatLng(lat, lng)
             mMap!!.addMarker(
-                MarkerOptions().position(LatLng(locationAtual.latitude, locationAtual.longitude)).title("XXXX").icon(
+                MarkerOptions().position(LatLng(lastLocation.latitude, lastLocation.longitude)).title("XXXX").icon(
                     BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)))
-            mMap!!.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(locationAtual.latitude, locationAtual.longitude), 15f))
-            val URL = getDirectionURL(LatLng(locationAtual.latitude, locationAtual.longitude), location1)
+            mMap!!.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(lastLocation.latitude, lastLocation.longitude), 15f))
+            val URL = getDirectionURL(LatLng(lastLocation.latitude, lastLocation.longitude), location1)
             GetDirection(URL).execute()
         }
         val btn_exit = requireView().findViewById<Button>(R.id.btnexit)
@@ -335,5 +291,8 @@ GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
     }
 
     fun reservar(view: View) {}
+    override fun onLocationChanged(p0: Location) {
+        TODO("Not yet implemented")
+    }
 
 }
