@@ -18,8 +18,13 @@ import android.widget.*
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.parkingsystem.GoogleMapDTO
 import com.example.parkingsystem.R
+import com.example.parkingsystem.api.ServiceBuilder
+import com.example.parkingsystem.api.parque.ParqueEndpoint
+import com.example.parkingsystem.model.Matricula
+import com.example.parkingsystem.model.Parque
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.location.LocationRequest
@@ -37,6 +42,9 @@ import okhttp3.*
 import org.json.JSONArray
 import org.json.JSONTokener
 import java.io.IOException
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class HomeFragment : Fragment(), OnMapReadyCallback, LocationListener,
 GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, GoogleMap.OnInfoWindowClickListener {
@@ -58,7 +66,25 @@ GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
         savedInstanceState: Bundle?
     ): View? {
 
-        // run("http://192.168.1.78:3000/api/parques/allParques")
+        val request = ServiceBuilder.buildService(ParqueEndpoint::class.java)
+        val call = request.getParques()
+
+        call.enqueue(object : Callback<List<Parque>> {
+            override fun onResponse(call: Call<List<Parque>>, response: Response<List<Parque>>) {
+
+                val parqueList: List<Parque> = response.body()!!
+
+                for (parque in parqueList) {
+
+                    hander.post(Runnable() {
+                        mMap!!.addMarker(MarkerOptions().position(LatLng(parque.latitude, parque.longitude)).title(parque.nomeParque).snippet(parque.morada))
+                    })
+                }
+            }
+            override fun onFailure(call: Call<List<Parque>>, t: Throwable) {
+                Toast.makeText(requireContext(), "${t.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
 
         // Inflate the layout for this fragment
         val v: View = inflater.inflate(R.layout.fragment_home, container, false)
@@ -77,7 +103,7 @@ GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
                 val geoCoder = Geocoder(requireContext())
                 try {
                     addressList = geoCoder.getFromLocationName(location, 1)
-                }catch (e: IOException){
+                }catch (e: java.io.IOException){
                     e.printStackTrace()
                 }
 
@@ -251,6 +277,7 @@ GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
         this.mMap!!.isMyLocationEnabled = true
 
     }
+
     private fun moveCamera(latlng : LatLng, zoom : Float, title : String){
         CoroutineScope(Main).launch {
             mMap!!.moveCamera(CameraUpdateFactory.newLatLngZoom(latlng, zoom))
@@ -309,37 +336,4 @@ GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
 
     fun reservar(view: View) {}
 
-
-    fun run(url: String) {
-
-        val client = OkHttpClient()
-
-        val request = Request.Builder()
-            .url(url)
-            .build()
-
-        client.newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                Log.i("Falha", e.toString())
-            }
-            override fun onResponse(call: Call, response: Response) {
-
-                val json= response.body.string()
-
-                val jsonArray = JSONTokener(json).nextValue() as JSONArray
-
-                for (i in 0 until jsonArray.length()) {
-
-                    val x = jsonArray.getJSONObject(i).getString("nomeParque")
-                    val y = jsonArray.getJSONObject(i).getString("morada")
-                    val lat = jsonArray.getJSONObject(i).getString("latitude").toDouble()
-                    val lng = jsonArray.getJSONObject(i).getString("longitude").toDouble()
-
-                    hander.post(Runnable() {
-                        mMap!!.addMarker(MarkerOptions().position(LatLng(lat, lng)).title(x).snippet(y))
-                    })
-                }
-            }
-        })
-    }
 }
