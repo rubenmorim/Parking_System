@@ -15,9 +15,13 @@ import androidx.fragment.app.Fragment
 import com.example.parkingsystem.R
 import com.example.parkingsystem.api.ServiceBuilder
 import com.example.parkingsystem.api.matricula.MatriculaEndpoint
+import com.example.parkingsystem.api.parque.ParqueEndpoint
 import com.example.parkingsystem.model.Matricula
+import com.example.parkingsystem.model.Parque
 import com.example.parkingsystem.model.Utilizador
 import com.example.parkingsystem.model.post.UtilizadorPost
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.WriterException
 import com.google.zxing.qrcode.QRCodeWriter
@@ -98,11 +102,36 @@ class QrCodeFragment : Fragment() {
 
         val alertDialog = AlertDialog.Builder(view.context)
         alertDialog.setTitle("Choose an Item")
+
+        val request = ServiceBuilder.buildService(MatriculaEndpoint::class.java)
+        //val call = request.getMatriculaUtilizador()
+        //val listItems = arrayOf("Ford Fiesta", "Fiat Multipla", "Mother Russia's Lada")
+
+
+        //call.enqueue(object : Callback<List<Matricula>> {
+            //override fun onResponse(call: Call<List<Matricula>>, response: Response<List<Matricula>>) {
+
+                //val listItem = arrayOf(response.body()!!)
+                //val matriculasList = response.body()!!
+                //val listItem = mutableListOf<Matricula>()
+
+                //for (matriculas in matriculasList) {
+                    //listItem.add(matriculas)
+
+                //}
+            //}
+            //override fun onFailure(call: Call<List<Matricula>>, t: Throwable) {
+                //Toast.makeText(requireContext(), "${t.message}", Toast.LENGTH_SHORT).show()
+            //}
+        //})
+
         val listItems = arrayOf("Ford Fiesta", "Fiat Multipla", "Mother Russia's Lada")
 
         alertDialog.setSingleChoiceItems(
             listItems, checkedItem[0]
         ) { dialog, which -> // update the selected item which is selected by the user
+
+            //colocar matricula como ativa
 
             // Set the licence plate
             requireView().findViewById<TextView>(R.id.textViewLicencePlate).text = listItems[which]
