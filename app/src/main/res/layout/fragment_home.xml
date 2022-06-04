@@ -24,7 +24,7 @@
                 android:layout_margin="10dp"
                 android:layout_weight="1"
                 android:background="@color/white"
-                android:hint=" Search Location..."
+                android:hint="      Search Location..."
                 android:inputType="textPersonName"
                 android:textColor="@color/black" />
 
@@ -67,7 +67,7 @@
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@id/img"
                 android:layout_margin="10dp"
-                android:textSize="16dp"
+                android:textSize="20dp"
                 android:textStyle="bold"
                 android:text="NOME"/>
 
@@ -104,13 +104,13 @@
 
             <Button
                 android:id="@+id/btnexit"
-                android:layout_width="20dp"
+                android:layout_width="50dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentRight="true"
-                android:layout_margin="1dp"
-                android:backgroundTint="@color/base"
-                android:textColor="@color/base"
+                android:layout_marginRight="10dp"
+                android:backgroundTint="@color/white"
+                android:textColor="#AEAEAE"
                 android:text="X" />
 
 
