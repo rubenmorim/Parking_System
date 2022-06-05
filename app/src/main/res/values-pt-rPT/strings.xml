@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Parking System</string>
+    <string name="hello_blank_fragment">Olá fragmento</string>
+    <string name="change_current_vehicle">"Alterar veículo atual "</string>
+    <string name="add_vehicle">Adicionar veículo</string>
+    <string name="payments">Pagamentos</string>
+    <string name="no_vehicles_configured_yet">Ainda sem veículos configurados</string>
+    <string name="please_add_a_vehicle_in_order_to_use_the_app">Porfavor insira um veículo para poder usar</string>
+    <string name="title_activity_maps">Mapa</string>
+    <string name="password">Palavra-passe</string>
+    <string name="sign_in">Entrar</string>
+    <string name="sign_up">Registar</string>
+</resources>
