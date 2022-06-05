@@ -1,8 +1,8 @@
 package com.example.parkingsystem.model
 
 data class Historico (
+    val idParque: Int,
     val nomeParque: String,
-    val data: String,
-    val tempoUtilizacao: Int,
-    val preco: Double
+    val entrada: String,
+    val saida: String
 )

@@ -29,15 +29,15 @@ class HistoricoAdapter(val historico: List<Historico>): RecyclerView.Adapter<His
 
 class HistoricoViewHolder(itemView : View): RecyclerView.ViewHolder(itemView){
     private val name: TextView = itemView.findViewById(R.id.tvNome)
-    private val data:TextView = itemView.findViewById(R.id.tvData)
-    private val tempo:TextView = itemView.findViewById(R.id.tvTempo)
-    private val preco:TextView = itemView.findViewById(R.id.tvPreco)
+    private val dataEntrada:TextView = itemView.findViewById(R.id.tvDataEntrada)
+    private val dataSaida:TextView = itemView.findViewById(R.id.tvDataSaida)
+    //private val preco:TextView = itemView.findViewById(R.id.tvPreco)
 
     fun bind(historico: Historico) {
         name.text = historico.nomeParque
-        data.text = historico.data
-        tempo.text = historico.tempoUtilizacao.toString()
-        preco.text = historico.preco.toString()
+        dataEntrada.text = historico.entrada
+        dataSaida.text = historico.saida
+        //preco.text = historico.preco.toString()
     }
 
 }
