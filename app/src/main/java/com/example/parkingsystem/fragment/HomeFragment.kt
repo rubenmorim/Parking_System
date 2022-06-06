@@ -165,7 +165,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, LocationListener, GoogleMap
         /**
         val mapFragment = supportFragmentManager.findFragmentById(R.id.myMap) as SupportMapFragment
         if(mapFragment != null) {
-            Toast.makeText(requireContext(), "Tomates", Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireContext(), "Tomates", Toast.LENGTH_SHORT).show()
         }
         mapFragment.getMapAsync(this) */
 
