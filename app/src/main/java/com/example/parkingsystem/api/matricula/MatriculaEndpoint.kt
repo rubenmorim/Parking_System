@@ -1,4 +1,5 @@
 package com.example.parkingsystem.api.matricula
+import com.example.parkingsystem.model.Historico
 import com.example.parkingsystem.model.Matricula
 import com.example.parkingsystem.model.Utilizador
 import com.example.parkingsystem.model.post.UtilizadorPost
@@ -11,8 +12,8 @@ import retrofit2.http.*
 
 interface MatriculaEndpoint {
 
-    @POST("/api/matricula/getMatriculaUtilizador")
-    fun getMatriculaUtilizador(@Body utilizador: UtilizadorPost): Call<List<Matricula>>
+    @GET("/api/matricula/getMatriculaUtilizador/{id}")
+    fun getMatriculaUtilizador(@Path("id") id: Int): Call<List<Matricula>>
 
     @FormUrlEncoded
     @POST("/api/matricula/createMatricula/")

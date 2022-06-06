@@ -1,7 +1,7 @@
 package com.example.parkingsystem.model
 
 data class Utilizador(
-    val id: Long,
+    val id: Int,
     val email: String,
     val firstName: String,
     val lastName: String,
