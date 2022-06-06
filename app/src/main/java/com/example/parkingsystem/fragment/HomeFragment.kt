@@ -4,45 +4,38 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Color
-import android.location.*
 import android.location.Address
+import android.location.Geocoder
+import android.location.Location
 import android.location.LocationListener
 import android.os.AsyncTask
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.parkingsystem.GoogleMapDTO
 import com.example.parkingsystem.R
 import com.example.parkingsystem.api.ServiceBuilder
 import com.example.parkingsystem.api.parque.ParqueEndpoint
-import com.example.parkingsystem.model.Matricula
 import com.example.parkingsystem.model.Parque
-import com.google.android.gms.common.ConnectionResult
-import com.google.android.gms.common.api.GoogleApiClient
-import com.google.android.gms.location.*
-import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationResult
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.google.gson.Gson
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers.Main
-import kotlinx.coroutines.launch
-import okhttp3.*
-import org.json.JSONArray
-import org.json.JSONTokener
-import java.io.IOException
+import okhttp3.OkHttpClient
+import okhttp3.Request
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -62,7 +55,11 @@ class HomeFragment : Fragment(), OnMapReadyCallback, LocationListener, GoogleMap
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
+        checkIfFragmentAttached {
+            fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
+        }
+
+
 
         locationCallback = object : LocationCallback() {
             override fun onLocationResult(p0: LocationResult) {
@@ -70,7 +67,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, LocationListener, GoogleMap
                 super.onLocationResult(p0)
                 lastLocation = p0.lastLocation
                 Log.d("**** SARA", lastLocation.toString())
-                var loc = LatLng(lastLocation.latitude, lastLocation.longitude)
+                val loc = LatLng(lastLocation.latitude, lastLocation.longitude)
                 mMap!!.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 15.0f))
             }
         }
@@ -80,20 +77,27 @@ class HomeFragment : Fragment(), OnMapReadyCallback, LocationListener, GoogleMap
 
     companion object {
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1
-        private const val REQUEST_CHECK_SETTINGS = 2
+        // private const val REQUEST_CHECK_SETTINGS = 2
     }
 
 
     private fun startLocationUpdates() {
-        if (ActivityCompat.checkSelfPermission(requireContext(),
-                android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        checkIfFragmentAttached {
+            if (ActivityCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
-            ActivityCompat.requestPermissions(requireActivity(),
-                arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),
-                LOCATION_PERMISSION_REQUEST_CODE)
-            return
+                ActivityCompat.requestPermissions(
+                    requireActivity(),
+                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                    LOCATION_PERMISSION_REQUEST_CODE
+                )
+                return@checkIfFragmentAttached
+            }
         }
-        fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null /* Looper */)
+
+        fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper() /* Looper */)
+
     }
 
     private fun createLocationRequest() {
@@ -118,13 +122,23 @@ class HomeFragment : Fragment(), OnMapReadyCallback, LocationListener, GoogleMap
 
                 for (parque in parqueList) {
 
-                    hander.post(Runnable() {
-                        mMap!!.addMarker(MarkerOptions().position(LatLng(parque.latitude, parque.longitude)).title(parque.nomeParque).snippet(parque.morada))
-                    })
+                    hander.post {
+                        mMap!!.addMarker(
+                            MarkerOptions().position(
+                                LatLng(
+                                    parque.latitude,
+                                    parque.longitude
+                                )
+                            ).title(parque.nomeParque).snippet(parque.morada)
+                        )
+                    }
                 }
             }
             override fun onFailure(call: Call<List<Parque>>, t: Throwable) {
-                Toast.makeText(requireContext(), "${t.message}", Toast.LENGTH_SHORT).show()
+                checkIfFragmentAttached {
+                    Toast.makeText(requireContext(), "${t.message}", Toast.LENGTH_SHORT).show()
+                }
+
             }
         })
 
@@ -134,40 +148,39 @@ class HomeFragment : Fragment(), OnMapReadyCallback, LocationListener, GoogleMap
         val btnsearch = v.findViewById<Button>(R.id.proc)
 
         btnsearch.setOnClickListener {
-            val locationSearch: EditText = v.findViewById(R.id.et_search)
-            val location: String = locationSearch.text.toString().trim()
-            var addressList: List<Address>? = null
-
-            if (location == ""){
-                // Toast.makeText(v, "provide location", Toast.LENGTH_SHORT).show()
-            } else {
-                val geoCoder = Geocoder(requireContext())
-                try {
-                    addressList = geoCoder.getFromLocationName(location, 1)
-                }catch (e: java.io.IOException){
-                    e.printStackTrace()
+            checkIfFragmentAttached {
+                    searchLocation()
                 }
-
-                val address = addressList!![0]
-                val latLng = LatLng(address.latitude, address.longitude)
-                mMap!!.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10f))
             }
-        }
 
         return v
+    }
+
+    private fun searchLocation() {
+        val locationSearch: EditText = requireView().findViewById(R.id.et_search)
+        val location: String = locationSearch.text.toString().trim()
+        var addressList: List<Address>? = null
+
+        if (location == ""){
+            // Toast.makeText(v, "provide location", Toast.LENGTH_SHORT).show()
+        } else {
+            val geoCoder = Geocoder(requireContext())
+            try {
+                addressList = geoCoder.getFromLocationName(location, 1)
+            }catch (e: java.io.IOException){
+                e.printStackTrace()
+            }
+
+            val address = addressList!![0]
+            val latLng = LatLng(address.latitude, address.longitude)
+            mMap!!.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10f))
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         val mapFragment = childFragmentManager.findFragmentById(R.id.myMap) as SupportMapFragment?
         mapFragment?.getMapAsync(this)
-
-        /**
-        val mapFragment = supportFragmentManager.findFragmentById(R.id.myMap) as SupportMapFragment
-        if(mapFragment != null) {
-        Toast.makeText(requireContext(), "Tomates", Toast.LENGTH_SHORT).show()
-        }
-        mapFragment.getMapAsync(this) */
 
         super.onViewCreated(view, savedInstanceState)
     }
@@ -192,7 +205,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, LocationListener, GoogleMap
             val client = OkHttpClient()
             val request = Request.Builder().url(url).build()
             val response = client.newCall(request).execute()
-            val data = response.body!!.string()
+            val data = response.body.string()
             val result = ArrayList<List<LatLng>>()
             try {
                 val respObj = Gson().fromJson(data, GoogleMapDTO::class.java)
@@ -265,13 +278,12 @@ class HomeFragment : Fragment(), OnMapReadyCallback, LocationListener, GoogleMap
 
     override fun onInfoWindowClick(p0: Marker) {
 
-
         val lat = p0.position.latitude
         val lng = p0.position.longitude
         val rl : RelativeLayout = requireView().findViewById(R.id.rl)
         rl.visibility = View.VISIBLE
         val tv1 : TextView = requireView().findViewById(R.id.tv1)
-        tv1.setText(p0.title)
+        tv1.text = p0.title
         val tv2 : TextView = requireView().findViewById(R.id.tv2)
         tv2.setText(p0.snippet + " " + lat + " " + lng)
         val btn_rota = requireView().findViewById<Button>(R.id.btnrota)
@@ -293,6 +305,15 @@ class HomeFragment : Fragment(), OnMapReadyCallback, LocationListener, GoogleMap
     fun reservar(view: View) {}
     override fun onLocationChanged(p0: Location) {
         TODO("Not yet implemented")
+    }
+
+    /**
+     * Function to wrap some bit of code that needs the context of the fragment NOT to be null
+     */
+    fun checkIfFragmentAttached(operation: Context.() -> Unit) {
+        if (isAdded && context != null) {
+            operation(requireContext())
+        }
     }
 
 }

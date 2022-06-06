@@ -1,6 +1,7 @@
 package com.example.parkingsystem.fragment
 
 import android.app.AlertDialog
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.os.Bundle
@@ -17,14 +18,9 @@ import com.example.parkingsystem.R
 import com.example.parkingsystem.api.ServiceBuilder
 import com.example.parkingsystem.api.matricula.MatriculaEndpoint
 import com.example.parkingsystem.model.Matricula
-import com.example.parkingsystem.model.Utilizador
-import com.example.parkingsystem.model.post.UtilizadorPost
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.WriterException
 import com.google.zxing.qrcode.QRCodeWriter
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.RequestBody.Companion.toRequestBody
-import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -35,10 +31,6 @@ class QrCodeFragment : Fragment() {
     private lateinit var ivQRCode: ImageView
     private lateinit var buttonChangeCurrentVehicle: Button
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -48,44 +40,42 @@ class QrCodeFragment : Fragment() {
 
         val button: Button = v.findViewById(R.id.buttonChangeCurrentVehicle)
         button.setOnClickListener {
-            this.changeLicencePlate(v);
+           changeLicencePlate(v)
         }
-        getMatriculaUtilizador(1)
+
         return v
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         ivQRCode = view.findViewById(R.id.qrCodeImageView)
 
-        // Call http service for default car
-        // ivQRCode.setImageBitmap(setQrCode("Os tomates do padre inácio!"))
-
-        requireView().findViewById<TextView>(R.id.textViewLicencePlate).setText(R.string.no_vehicles_configured_yet)
-        requireView().findViewById<ImageView>(R.id.qrCodeImageView)
-            .setImageResource(R.drawable.ic_car_not_found)
-        requireView().findViewById<TextView>(R.id.textViewInfo).visibility = View.VISIBLE
-        // Hide the buttons
+        // Set the default as car not found
+        checkIfFragmentAttached { setQRCodeState(false, null)  }
+        getMatriculaUtilizador(1654173834566)
     }
 
-    private fun getMatriculaUtilizador(idUtilizador: Int) {
+    private fun getMatriculaUtilizador(idUtilizador: Long) {
 
         val request = ServiceBuilder.buildService(MatriculaEndpoint::class.java)
-        val call = request.getMatriculaUtilizador(1)
+        val call = request.getMatriculaUtilizador(idUtilizador)
 
         call.enqueue(object : Callback<List<Matricula>> {
             override fun onResponse(call: Call<List<Matricula>>, response: Response<List<Matricula>>) {
 
-                for (matriculas in response.body()!!) {
-                    if(matriculas.isSelected) {
-                        requireView().findViewById<TextView>(R.id.textViewLicencePlate).text = matriculas.matricula
-                        requireView().findViewById<ImageView>(R.id.qrCodeImageView)
-                            .setImageBitmap(setQrCode(matriculas.matricula))
-                        requireView().findViewById<TextView>(R.id.textViewInfo).visibility = View.GONE
+                // If the response is empty, by default the image is "Car not found" set in the onCreateView
+                if(response.body()!!.isNotEmpty()) {
+                    for (matriculas in response.body()!!) {
+                        if(matriculas.isSelected) {
+                            setQRCodeState(true, matriculas.matricula)
+                        }
                     }
                 }
             }
             override fun onFailure(call: Call<List<Matricula>>, t: Throwable) {
-                Toast.makeText(requireContext(), "${t.message}", Toast.LENGTH_SHORT).show()
+                checkIfFragmentAttached {
+                    Toast.makeText(requireContext(), "${t.message}", Toast.LENGTH_SHORT).show()
+                }
+
             }
         })
     }
@@ -149,15 +139,16 @@ class QrCodeFragment : Fragment() {
 
                         }
                         override fun onFailure(call: Call<List<Matricula>>, t: Throwable) {
-                            Toast.makeText(requireContext(), "${t.message}", Toast.LENGTH_SHORT).show()
+                            checkIfFragmentAttached {
+                                checkIfFragmentAttached { Toast.makeText(requireContext(), "${t.message}", Toast.LENGTH_SHORT)
+                                    .show()
+                                }
+                            }
                         }
                     })
 
                     // Set the licence plate
-                    requireView().findViewById<TextView>(R.id.textViewLicencePlate).text = listItems[which]
-                    requireView().findViewById<ImageView>(R.id.qrCodeImageView)
-                        .setImageBitmap(setQrCode(listItems[which]!!))
-                    requireView().findViewById<TextView>(R.id.textViewInfo).visibility = View.GONE
+                    setQRCodeState(true, listItems[which])
                     // when selected an item the dialog should be closed with the dismiss method
                     dialog.dismiss()
                 }
@@ -174,12 +165,43 @@ class QrCodeFragment : Fragment() {
 
             }
             override fun onFailure(call: Call<List<Matricula>>, t: Throwable) {
-                Toast.makeText(requireContext(), "${t.message}", Toast.LENGTH_SHORT).show()
+                checkIfFragmentAttached {
+                    Toast.makeText(requireContext(), "${t.message}", Toast.LENGTH_SHORT).show()
+                }
+
             }
         })
+    }
 
+    /**
+     * Function to wrap some bit of code that needs the context of the fragment NOT to be null
+     */
+    private fun checkIfFragmentAttached(operation: Context.() -> Unit) {
+        if (isAdded && context != null) {
+            operation(requireContext())
+        }
+    }
+
+    /**
+     * Function to change the layout (display QR Code instead of default "Not found", etc) of the fragment
+     * based on the fact if a car is selected. state == true means a car is selecred
+     */
+    private fun setQRCodeState(state: Boolean, licencePlate: String?) {
+
+        if(state) {
+            requireView().findViewById<TextView>(R.id.textViewLicencePlate).text = licencePlate
+            requireView().findViewById<ImageView>(R.id.qrCodeImageView)
+                .setImageBitmap(setQrCode(licencePlate!!))
+            requireView().findViewById<TextView>(R.id.textViewInfo).visibility = View.GONE
+        } else {
+            requireView().findViewById<TextView>(R.id.textViewLicencePlate).setText(R.string.no_vehicles_configured_yet)
+            requireView().findViewById<ImageView>(R.id.qrCodeImageView)
+                .setImageResource(R.drawable.ic_car_not_found)
+            requireView().findViewById<TextView>(R.id.textViewInfo).visibility = View.VISIBLE
+        }
 
     }
+
 
 
 }
