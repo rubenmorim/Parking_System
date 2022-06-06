@@ -1,6 +1,7 @@
 package com.example.parkingsystem.fragment
 
 import android.app.AlertDialog
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.os.Bundle
@@ -35,12 +36,6 @@ class QrCodeFragment : Fragment() {
     private lateinit var buttonChangeCurrentVehicle: Button
     private var idUtilizador: Long = 1654173834566
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -53,7 +48,9 @@ class QrCodeFragment : Fragment() {
         button.setOnClickListener {
             this.changeLicencePlate(v);
         }
-        getMatriculaUtilizador(idUtilizador)
+        checkIfFragmentAttached {
+            getMatriculaUtilizador(idUtilizador)
+        }
 
         return v
     }
@@ -152,5 +149,11 @@ class QrCodeFragment : Fragment() {
                 Toast.makeText(requireContext(), "${t.message}", Toast.LENGTH_SHORT).show()
             }
         })
+    }
+
+    private fun checkIfFragmentAttached(operation: Context.() -> Unit) {
+        if (isAdded && context != null) {
+            operation(requireContext())
+        }
     }
 }

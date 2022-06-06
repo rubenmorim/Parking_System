@@ -62,7 +62,12 @@ GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
 
         // Inflate the layout for this fragment
         val v: View = inflater.inflate(R.layout.fragment_home, container, false)
-        getLocation();
+
+        checkIfFragmentAttached {
+            getLocation();
+        }
+
+
 
         val btnsearch = v.findViewById<Button>(R.id.proc)
 
@@ -74,11 +79,17 @@ GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
             if (location == ""){
                 // Toast.makeText(v, "provide location", Toast.LENGTH_SHORT).show()
             } else {
-                val geoCoder = Geocoder(requireContext())
-                try {
-                    addressList = geoCoder.getFromLocationName(location, 1)
-                }catch (e: IOException){
-                    e.printStackTrace()
+
+
+                checkIfFragmentAttached {
+                    val geoCoder = Geocoder(requireContext())
+
+                    try {
+                        addressList = geoCoder.getFromLocationName(location, 1)
+                    } catch (e: IOException){
+                        e.printStackTrace()
+                    }
+
                 }
 
                 val address = addressList!![0]
@@ -113,7 +124,7 @@ GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
         to the Activity in which the Fragment is contained and then magically retrieve the system
         service you want.
          */
-        locationManager = requireActivity().getSystemService(Context.LOCATION_SERVICE) as LocationManager
+
         if(ActivityCompat.checkSelfPermission(
                 requireContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -131,6 +142,7 @@ GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
         } else {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5f, this)
         }
+
     }
 
 
@@ -341,5 +353,11 @@ GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
                 }
             }
         })
+    }
+
+    private fun checkIfFragmentAttached(operation: Context.() -> Unit) {
+        if (isAdded && context != null) {
+            operation(requireContext())
+        }
     }
 }
