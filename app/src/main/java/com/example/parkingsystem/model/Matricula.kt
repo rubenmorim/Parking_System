@@ -1,9 +1,9 @@
 package com.example.parkingsystem.model
 
 data class Matricula(
-    val id: Long,
+    val id: Int,
     val nomeCarro: String,
     val matricula: String,
-    val idUtilizador: Long,
+    val idUtilizador: Int,
     val isSelected: Boolean
 )

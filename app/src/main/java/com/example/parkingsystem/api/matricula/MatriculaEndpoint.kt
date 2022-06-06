@@ -11,8 +11,11 @@ import retrofit2.http.*
 
 interface MatriculaEndpoint {
 
-    @POST("/api/matricula/getMatriculaUtilizador")
-    fun getMatriculaUtilizador(@Body utilizador: UtilizadorPost): Call<List<Matricula>>
+    @GET("/api/matricula/getMatriculaUtilizador/{id}")
+    fun getMatriculaUtilizador(@Path("id") id: Int): Call<List<Matricula>>
+
+    @GET("/api/matricula/updateMatriculaSelected?idUtilizador&idMatricula")
+    fun updateMatricula(@Query("idUtilizador") idUtilizador: Int, @Query("matricula") matricula: String): Call<List<Matricula>>
 
     @FormUrlEncoded
     @POST("/api/matricula/createMatricula/")
