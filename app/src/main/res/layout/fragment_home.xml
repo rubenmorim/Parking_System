@@ -50,7 +50,7 @@
         <RelativeLayout
             android:id="@+id/rl"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="200dp"
             android:layout_alignParentBottom="true"
             android:background="@color/white"
             android:visibility="invisible">
@@ -67,7 +67,7 @@
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@id/img"
                 android:layout_margin="10dp"
-                android:textSize="20dp"
+                android:textSize="15dp"
                 android:textStyle="bold"
                 android:text="NOME"/>
 

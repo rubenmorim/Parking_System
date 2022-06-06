@@ -16,13 +16,9 @@ import androidx.fragment.app.Fragment
 import com.example.parkingsystem.R
 import com.example.parkingsystem.api.ServiceBuilder
 import com.example.parkingsystem.api.matricula.MatriculaEndpoint
-import com.example.parkingsystem.api.parque.ParqueEndpoint
 import com.example.parkingsystem.model.Matricula
-import com.example.parkingsystem.model.Parque
 import com.example.parkingsystem.model.Utilizador
 import com.example.parkingsystem.model.post.UtilizadorPost
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.WriterException
 import com.google.zxing.qrcode.QRCodeWriter
@@ -38,11 +34,9 @@ class QrCodeFragment : Fragment() {
 
     private lateinit var ivQRCode: ImageView
     private lateinit var buttonChangeCurrentVehicle: Button
-    private var idUtilizador: Int = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
     }
 
     override fun onCreateView(
@@ -50,15 +44,13 @@ class QrCodeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-
         val v: View = inflater.inflate(R.layout.fragment_qr_code, container, false)
 
         val button: Button = v.findViewById(R.id.buttonChangeCurrentVehicle)
         button.setOnClickListener {
             this.changeLicencePlate(v);
         }
-        //getMatriculaUtilizador(idUtilizador)
-
+        getMatriculaUtilizador(1)
         return v
     }
 
@@ -75,6 +67,28 @@ class QrCodeFragment : Fragment() {
         // Hide the buttons
     }
 
+    private fun getMatriculaUtilizador(idUtilizador: Int) {
+
+        val request = ServiceBuilder.buildService(MatriculaEndpoint::class.java)
+        val call = request.getMatriculaUtilizador(1)
+
+        call.enqueue(object : Callback<List<Matricula>> {
+            override fun onResponse(call: Call<List<Matricula>>, response: Response<List<Matricula>>) {
+
+                for (matriculas in response.body()!!) {
+                    if(matriculas.isSelected) {
+                        requireView().findViewById<TextView>(R.id.textViewLicencePlate).text = matriculas.matricula
+                        requireView().findViewById<ImageView>(R.id.qrCodeImageView)
+                            .setImageBitmap(setQrCode(matriculas.matricula))
+                        requireView().findViewById<TextView>(R.id.textViewInfo).visibility = View.GONE
+                    }
+                }
+            }
+            override fun onFailure(call: Call<List<Matricula>>, t: Throwable) {
+                Toast.makeText(requireContext(), "${t.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
 
     private fun setQrCode(licencePlate: String): Bitmap? {
         val data = licencePlate.trim()
@@ -101,10 +115,6 @@ class QrCodeFragment : Fragment() {
 
         val request = ServiceBuilder.buildService(MatriculaEndpoint::class.java)
         val call = request.getMatriculaUtilizador(1)
-        //val listItemsm = arrayOf("Ford Fiesta", "Fiat Multipla", "Mother Russia's Lada")
-
-        //val listItems = mutableListOf<String>()
-        //val listItems = arrayOfNulls<String>(1)
 
         call.enqueue(object : Callback<List<Matricula>> {
             override fun onResponse(call: Call<List<Matricula>>, response: Response<List<Matricula>>) {
@@ -124,13 +134,24 @@ class QrCodeFragment : Fragment() {
                 alertDialog.setTitle("Choose an Item")
 
 
-                //val listItems = arrayOf("Ford Fiesta", "Fiat Multipla", "Mother Russia's Lada")
-
                 alertDialog.setSingleChoiceItems(
                     listItems, checkedItem[0]
                 ) { dialog, which -> // update the selected item which is selected by the user
 
                     //colocar matricula como ativa
+                    val request = ServiceBuilder.buildService(MatriculaEndpoint::class.java)
+                    val call = request.updateMatricula(1, listItems[which].toString())
+
+                    call.enqueue(object : Callback<List<Matricula>> {
+                        override fun onResponse(call: Call<List<Matricula>>, response: Response<List<Matricula>>) {
+
+                            Log.i("MIGUEL", response.body().toString())
+
+                        }
+                        override fun onFailure(call: Call<List<Matricula>>, t: Throwable) {
+                            Toast.makeText(requireContext(), "${t.message}", Toast.LENGTH_SHORT).show()
+                        }
+                    })
 
                     // Set the licence plate
                     requireView().findViewById<TextView>(R.id.textViewLicencePlate).text = listItems[which]
@@ -151,19 +172,6 @@ class QrCodeFragment : Fragment() {
                 // show the alert dialog when the button is clicked
                 customAlertDialog.show()
 
-                //val listItem = arrayOf(response.body()!!)
-                //val c: List<Matricula> = response.body()!!
-                //Toast.makeText(requireContext(), c.toString(),Toast.LENGTH_SHORT).show()
-                //val matriculasList = response.body()!!
-                //listItems.addAll(response.body()!!)
-
-                //for (matriculas in matriculasList) {
-                //for(i in x.size) {
-                //x.set()
-                //}
-                //listItems[0] = matriculas.matricula
-                //listItems.add(matriculas.matricula)
-                //}
             }
             override fun onFailure(call: Call<List<Matricula>>, t: Throwable) {
                 Toast.makeText(requireContext(), "${t.message}", Toast.LENGTH_SHORT).show()

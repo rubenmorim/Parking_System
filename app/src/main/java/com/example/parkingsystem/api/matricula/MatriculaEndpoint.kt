@@ -1,5 +1,4 @@
 package com.example.parkingsystem.api.matricula
-import com.example.parkingsystem.model.Historico
 import com.example.parkingsystem.model.Matricula
 import com.example.parkingsystem.model.Utilizador
 import com.example.parkingsystem.model.post.UtilizadorPost
@@ -14,6 +13,9 @@ interface MatriculaEndpoint {
 
     @GET("/api/matricula/getMatriculaUtilizador/{id}")
     fun getMatriculaUtilizador(@Path("id") id: Int): Call<List<Matricula>>
+
+    @GET("/api/matricula/updateMatriculaSelected?idUtilizador&idMatricula")
+    fun updateMatricula(@Query("idUtilizador") idUtilizador: Int, @Query("matricula") matricula: String): Call<List<Matricula>>
 
     @FormUrlEncoded
     @POST("/api/matricula/createMatricula/")
