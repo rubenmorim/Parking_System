@@ -9,10 +9,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.parkingsystem.api.EndPoints
-import com.example.parkingsystem.api.LoginRequest
-import com.example.parkingsystem.api.ServiceBuilder
-import com.example.parkingsystem.api.User
+import com.example.parkingsystem.api.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -31,22 +28,41 @@ class LoginActivity : AppCompatActivity() {
     fun onClickLogin(view: View) {
         val email = findViewById<EditText>(R.id.editTextTextEmailAddress)
         val password = findViewById<EditText>(R.id.editTextTextPassword)
+        if (email.text.toString() == "" || password.text.toString() == "") {
+            Toast.makeText(this@LoginActivity, "Preencha os campos de utilizador!", Toast.LENGTH_SHORT).show()
+            return
+        }
         val request = ServiceBuilder.buildService(EndPoints::class.java)
         val req = LoginRequest( email = email.text.toString(), password = password.text.toString() )
         val call = request.login(req)
 
-        call.enqueue(object : Callback<User> {
-            override fun onResponse(call: Call<User>, response: Response<User>) {
+        call.enqueue(object : Callback<Res> {
+            override fun onResponse(call: Call<Res>, response: Response<Res>) {
                 if (response.isSuccessful){
-                    val c: User = response.body()!!
-                    Toast.makeText(this@LoginActivity, c.id.toString() + "-" + c.firstName, Toast.LENGTH_SHORT).show()
+                    val res: Res = response.body()!!
+                    //Guardar o utilizador na storage
+
+                    //Ir para a página activity main
+
+
+                    Log.d("call", call.toString())
+                    Log.d("res", response.toString())
+                    Log.d("code", response.code().toString())
+                    Log.d("message", response.message().toString())
+                    Log.d("body", res.toString())
+                    Log.d("id", res.response.id.toString())
+                    //Log.d("firstName", user.firstName)
+                    //Log.d("lastName", user.lastName)
+                    //Log.d("birthday", user.birthday)
+
+                    Toast.makeText(this@LoginActivity, res.response.id.toString() + " - " + res.response.firstName, Toast.LENGTH_SHORT).show()
                 }
-                Log.d("tag0", response.toString())
-                Toast.makeText(this@LoginActivity, response.toString(), Toast.LENGTH_SHORT).show()
+
+                Toast.makeText(this@LoginActivity, "ola:" +response.toString(), Toast.LENGTH_SHORT).show()
 
             }
-            override fun onFailure(call: Call<User>, t: Throwable) {
-                Toast.makeText(this@LoginActivity, "${t.message}", Toast.LENGTH_SHORT).show()
+            override fun onFailure(call: Call<Res>, t: Throwable) {
+                Toast.makeText(this@LoginActivity, "Email e/ou Password invalido(s)", Toast.LENGTH_SHORT).show()
             }
         })
 
