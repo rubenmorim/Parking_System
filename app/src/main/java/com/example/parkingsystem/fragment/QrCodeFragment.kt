@@ -34,11 +34,9 @@ class QrCodeFragment : Fragment() {
 
     private lateinit var ivQRCode: ImageView
     private lateinit var buttonChangeCurrentVehicle: Button
-    private var idUtilizador: Int = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
     }
 
     override fun onCreateView(
@@ -46,15 +44,13 @@ class QrCodeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-
         val v: View = inflater.inflate(R.layout.fragment_qr_code, container, false)
 
         val button: Button = v.findViewById(R.id.buttonChangeCurrentVehicle)
         button.setOnClickListener {
             this.changeLicencePlate(v);
         }
-        //getMatriculaUtilizador(idUtilizador)
-
+        getMatriculaUtilizador(1)
         return v
     }
 
@@ -71,6 +67,28 @@ class QrCodeFragment : Fragment() {
         // Hide the buttons
     }
 
+    private fun getMatriculaUtilizador(idUtilizador: Int) {
+
+        val request = ServiceBuilder.buildService(MatriculaEndpoint::class.java)
+        val call = request.getMatriculaUtilizador(1)
+
+        call.enqueue(object : Callback<List<Matricula>> {
+            override fun onResponse(call: Call<List<Matricula>>, response: Response<List<Matricula>>) {
+
+                for (matriculas in response.body()!!) {
+                    if(matriculas.isSelected) {
+                        requireView().findViewById<TextView>(R.id.textViewLicencePlate).text = matriculas.matricula
+                        requireView().findViewById<ImageView>(R.id.qrCodeImageView)
+                            .setImageBitmap(setQrCode(matriculas.matricula))
+                        requireView().findViewById<TextView>(R.id.textViewInfo).visibility = View.GONE
+                    }
+                }
+            }
+            override fun onFailure(call: Call<List<Matricula>>, t: Throwable) {
+                Toast.makeText(requireContext(), "${t.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
 
     private fun setQrCode(licencePlate: String): Bitmap? {
         val data = licencePlate.trim()
