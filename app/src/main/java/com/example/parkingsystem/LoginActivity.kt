@@ -1,27 +1,35 @@
 package com.example.parkingsystem
 
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.EditText
 import android.widget.Toast
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import androidx.activity.viewModels
+import com.example.parkingsystem.room.viewModel.UserViewModel
 import com.example.parkingsystem.api.*
+import com.example.parkingsystem.room.application.UsersApplication
+import com.example.parkingsystem.room.dao.UserDao
+import com.example.parkingsystem.room.entity.User
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 class LoginActivity : AppCompatActivity() {
 
+    private val userViewModel: UserViewModel by viewModels {
+        UserViewModel.UserViewModelFactory((application as UsersApplication).repository)
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
+        //userViewModel.allUsers.observe(this, Observer { users ->
 
+        //})
 
     }
 
@@ -42,18 +50,17 @@ class LoginActivity : AppCompatActivity() {
                     val res: Res = response.body()!!
                     //Guardar o utilizador na storage
 
+                    val user = User( res.response.id, res.response.email, res.response.firstName, res.response.lastName, res.response.birthday )
+                    Log.d("userStorage", user.id.toString())
+                    userViewModel.insert(user)
+                    val users = userViewModel.allUsers
+
+                    Log.d("userStorage", userViewModel.allUsers.toString())
+                    userViewModel.allUsers
+
+
                     //Ir para a página activity main
 
-
-                    Log.d("call", call.toString())
-                    Log.d("res", response.toString())
-                    Log.d("code", response.code().toString())
-                    Log.d("message", response.message().toString())
-                    Log.d("body", res.toString())
-                    Log.d("id", res.response.id.toString())
-                    //Log.d("firstName", user.firstName)
-                    //Log.d("lastName", user.lastName)
-                    //Log.d("birthday", user.birthday)
 
                     Toast.makeText(this@LoginActivity, res.response.id.toString() + " - " + res.response.firstName, Toast.LENGTH_SHORT).show()
                 }
