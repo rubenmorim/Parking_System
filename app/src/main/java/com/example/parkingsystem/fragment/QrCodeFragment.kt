@@ -30,11 +30,12 @@ class QrCodeFragment : Fragment() {
 
     private lateinit var ivQRCode: ImageView
     private lateinit var buttonChangeCurrentVehicle: Button
+    private var idUtilizador: Long = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         val v: View = inflater.inflate(R.layout.fragment_qr_code, container, false)
 
@@ -42,6 +43,8 @@ class QrCodeFragment : Fragment() {
         button.setOnClickListener {
            changeLicencePlate(v)
         }
+
+        idUtilizador = 1
 
         return v
     }
@@ -51,7 +54,7 @@ class QrCodeFragment : Fragment() {
 
         // Set the default as car not found
         checkIfFragmentAttached { setQRCodeState(false, null)  }
-        getMatriculaUtilizador(1654173834566)
+        getMatriculaUtilizador(idUtilizador)
     }
 
     private fun getMatriculaUtilizador(idUtilizador: Long) {
@@ -62,7 +65,8 @@ class QrCodeFragment : Fragment() {
         call.enqueue(object : Callback<List<Matricula>> {
             override fun onResponse(call: Call<List<Matricula>>, response: Response<List<Matricula>>) {
 
-                // If the response is empty, by default the image is "Car not found" set in the onCreateView
+                // If the response is empty, by default the image is "Car not found"
+                // set in the onCreateView
                 if(response.body()!!.isNotEmpty()) {
                     for (matriculas in response.body()!!) {
                         if(matriculas.isSelected) {
@@ -73,9 +77,8 @@ class QrCodeFragment : Fragment() {
             }
             override fun onFailure(call: Call<List<Matricula>>, t: Throwable) {
                 checkIfFragmentAttached {
-                    Toast.makeText(requireContext(), "${t.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "List of licence plate : ${t.message}", Toast.LENGTH_SHORT).show()
                 }
-
             }
         })
     }
@@ -101,10 +104,10 @@ class QrCodeFragment : Fragment() {
         }
     }
 
-    fun changeLicencePlate(view: View) {
+    private fun changeLicencePlate(view: View) {
 
         val request = ServiceBuilder.buildService(MatriculaEndpoint::class.java)
-        val call = request.getMatriculaUtilizador(1)
+        val call = request.getMatriculaUtilizador(idUtilizador)
 
         call.enqueue(object : Callback<List<Matricula>> {
             override fun onResponse(call: Call<List<Matricula>>, response: Response<List<Matricula>>) {
@@ -130,7 +133,7 @@ class QrCodeFragment : Fragment() {
 
                     //colocar matricula como ativa
                     val request = ServiceBuilder.buildService(MatriculaEndpoint::class.java)
-                    val call = request.updateMatricula(1, listItems[which].toString())
+                    val call = request.updateMatricula(idUtilizador, listItems[which].toString())
 
                     call.enqueue(object : Callback<List<Matricula>> {
                         override fun onResponse(call: Call<List<Matricula>>, response: Response<List<Matricula>>) {
@@ -140,7 +143,7 @@ class QrCodeFragment : Fragment() {
                         }
                         override fun onFailure(call: Call<List<Matricula>>, t: Throwable) {
                             checkIfFragmentAttached {
-                                checkIfFragmentAttached { Toast.makeText(requireContext(), "${t.message}", Toast.LENGTH_SHORT)
+                                checkIfFragmentAttached { Toast.makeText(requireContext(), "Update licence plate: ${t.message}", Toast.LENGTH_SHORT)
                                     .show()
                                 }
                             }
@@ -166,9 +169,8 @@ class QrCodeFragment : Fragment() {
             }
             override fun onFailure(call: Call<List<Matricula>>, t: Throwable) {
                 checkIfFragmentAttached {
-                    Toast.makeText(requireContext(), "${t.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Change licence plate (update) : ${t.message}", Toast.LENGTH_SHORT).show()
                 }
-
             }
         })
     }
@@ -187,7 +189,6 @@ class QrCodeFragment : Fragment() {
      * based on the fact if a car is selected. state == true means a car is selecred
      */
     private fun setQRCodeState(state: Boolean, licencePlate: String?) {
-
         if(state) {
             requireView().findViewById<TextView>(R.id.textViewLicencePlate).text = licencePlate
             requireView().findViewById<ImageView>(R.id.qrCodeImageView)
@@ -199,9 +200,5 @@ class QrCodeFragment : Fragment() {
                 .setImageResource(R.drawable.ic_car_not_found)
             requireView().findViewById<TextView>(R.id.textViewInfo).visibility = View.VISIBLE
         }
-
     }
-
-
-
 }

@@ -1,8 +1,8 @@
 package com.example.parkingsystem.model
 
 data class Parque(
-    val id: Int,
-    val idTipoParque: Int,
+    val id: Long,
+    val idTipoParque: Long,
     val nomeParque: String,
     val precoHora: Double,
     val totalVagas: Int,
