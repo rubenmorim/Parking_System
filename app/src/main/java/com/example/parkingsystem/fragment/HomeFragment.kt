@@ -4,25 +4,29 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Color
-import android.location.*
 import android.location.Address
+import android.location.Geocoder
+import android.location.Location
+import android.location.LocationListener
 import android.os.AsyncTask
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.parkingsystem.GoogleMapDTO
 import com.example.parkingsystem.R
-import com.google.android.gms.common.ConnectionResult
-import com.google.android.gms.common.api.GoogleApiClient
-import com.google.android.gms.location.LocationRequest
+import com.example.parkingsystem.api.ServiceBuilder
+import com.example.parkingsystem.api.parque.ParqueEndpoint
+import com.example.parkingsystem.model.Parque
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -30,27 +34,77 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.google.gson.Gson
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers.Main
-import kotlinx.coroutines.launch
-import okhttp3.*
-import org.json.JSONArray
-import org.json.JSONTokener
-import java.io.IOException
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
-class HomeFragment : Fragment(), OnMapReadyCallback, LocationListener,
-GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, GoogleMap.OnInfoWindowClickListener {
+class HomeFragment : Fragment(), OnMapReadyCallback, LocationListener, GoogleMap.OnInfoWindowClickListener {
 
     private var mMap: GoogleMap? = null
-    private var mGoogleApiClient: GoogleApiClient? = null
-    private lateinit var mLocationRequest: LocationRequest
-    private lateinit var locationManager: LocationManager
-    private val locationPermissionCode = 111
-    private lateinit var locationAtual : Location
     private val hander = Handler()
+
+    private lateinit var lastLocation: Location
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+
+    private lateinit var locationCallback: LocationCallback
+    private lateinit var locationRequest: com.google.android.gms.location.LocationRequest
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        checkIfFragmentAttached {
+            fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
+        }
+
+
+
+        locationCallback = object : LocationCallback() {
+            override fun onLocationResult(p0: LocationResult) {
+                Log.d("**** SARA", p0.toString())
+                super.onLocationResult(p0)
+                lastLocation = p0.lastLocation
+                Log.d("**** SARA", lastLocation.toString())
+                val loc = LatLng(lastLocation.latitude, lastLocation.longitude)
+                mMap!!.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 15.0f))
+            }
+        }
+
+        createLocationRequest()
+    }
+
+    companion object {
+        private const val LOCATION_PERMISSION_REQUEST_CODE = 1
+        // private const val REQUEST_CHECK_SETTINGS = 2
+    }
+
+
+    private fun startLocationUpdates() {
+        checkIfFragmentAttached {
+            if (ActivityCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+                ActivityCompat.requestPermissions(
+                    requireActivity(),
+                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                    LOCATION_PERMISSION_REQUEST_CODE
+                )
+                return@checkIfFragmentAttached
+            }
+        }
+
+        fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper() /* Looper */)
+
+    }
+
+    private fun createLocationRequest() {
+        locationRequest = com.google.android.gms.location.LocationRequest()
+        // interval specifies the rate at which your app will like to receive updates.
+        locationRequest.interval = 60000
+        locationRequest.priority = com.google.android.gms.location.LocationRequest.PRIORITY_HIGH_ACCURACY
     }
 
     override fun onCreateView(
@@ -58,36 +112,69 @@ GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
         savedInstanceState: Bundle?
     ): View? {
 
-        // run("http://192.168.1.78:3000/api/parques/allParques")
+        val request = ServiceBuilder.buildService(ParqueEndpoint::class.java)
+        val call = request.getParques()
+
+        call.enqueue(object : Callback<List<Parque>> {
+            override fun onResponse(call: Call<List<Parque>>, response: Response<List<Parque>>) {
+
+                val parqueList: List<Parque> = response.body()!!
+
+                for (parque in parqueList) {
+
+                    hander.post {
+                        mMap!!.addMarker(
+                            MarkerOptions().position(
+                                LatLng(
+                                    parque.latitude,
+                                    parque.longitude
+                                )
+                            ).title(parque.nomeParque).snippet(parque.morada)
+                        )
+                    }
+                }
+            }
+            override fun onFailure(call: Call<List<Parque>>, t: Throwable) {
+                checkIfFragmentAttached {
+                    Toast.makeText(requireContext(), "${t.message}", Toast.LENGTH_SHORT).show()
+                }
+
+            }
+        })
 
         // Inflate the layout for this fragment
         val v: View = inflater.inflate(R.layout.fragment_home, container, false)
-        getLocation();
 
         val btnsearch = v.findViewById<Button>(R.id.proc)
 
         btnsearch.setOnClickListener {
-            val locationSearch: EditText = v.findViewById(R.id.et_search)
-            val location: String = locationSearch.text.toString().trim()
-            var addressList: List<Address>? = null
-
-            if (location == ""){
-                // Toast.makeText(v, "provide location", Toast.LENGTH_SHORT).show()
-            } else {
-                val geoCoder = Geocoder(requireContext())
-                try {
-                    addressList = geoCoder.getFromLocationName(location, 1)
-                }catch (e: IOException){
-                    e.printStackTrace()
+            checkIfFragmentAttached {
+                    searchLocation()
                 }
-
-                val address = addressList!![0]
-                val latLng = LatLng(address.latitude, address.longitude)
-                mMap!!.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10f))
             }
-        }
 
         return v
+    }
+
+    private fun searchLocation() {
+        val locationSearch: EditText = requireView().findViewById(R.id.et_search)
+        val location: String = locationSearch.text.toString().trim()
+        var addressList: List<Address>? = null
+
+        if (location == ""){
+            // Toast.makeText(v, "provide location", Toast.LENGTH_SHORT).show()
+        } else {
+            val geoCoder = Geocoder(requireContext())
+            try {
+                addressList = geoCoder.getFromLocationName(location, 1)
+            }catch (e: java.io.IOException){
+                e.printStackTrace()
+            }
+
+            val address = addressList!![0]
+            val latLng = LatLng(address.latitude, address.longitude)
+            mMap!!.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10f))
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -95,42 +182,17 @@ GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
         val mapFragment = childFragmentManager.findFragmentById(R.id.myMap) as SupportMapFragment?
         mapFragment?.getMapAsync(this)
 
-        /**
-        val mapFragment = supportFragmentManager.findFragmentById(R.id.myMap) as SupportMapFragment
-        if(mapFragment != null) {
-            Toast.makeText(requireContext(), "Tomates", Toast.LENGTH_SHORT).show()
-        }
-        mapFragment.getMapAsync(this) */
-
         super.onViewCreated(view, savedInstanceState)
     }
-    private fun getLocation() {
 
-        /**
-        Why that one extra method call - requireActivity()?
-        the getSystemService() method that provides access to system services comes from Context.
-        An Activity extends Context, a Fragment does not. Hence, you first need to get a reference
-        to the Activity in which the Fragment is contained and then magically retrieve the system
-        service you want.
-         */
-        locationManager = requireActivity().getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        if(ActivityCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-            && ActivityCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED)
-        {
-            ActivityCompat.requestPermissions(
-                requireActivity(),
-                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                locationPermissionCode
-            )
-        } else {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5f, this)
-        }
+    override fun onResume() {
+        super.onResume()
+        startLocationUpdates()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        fusedLocationClient.removeLocationUpdates(locationCallback)
     }
 
 
@@ -143,7 +205,7 @@ GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
             val client = OkHttpClient()
             val request = Request.Builder().url(url).build()
             val response = client.newCall(request).execute()
-            val data = response.body!!.string()
+            val data = response.body.string()
             val result = ArrayList<List<LatLng>>()
             try {
                 val respObj = Gson().fromJson(data, GoogleMapDTO::class.java)
@@ -212,93 +274,26 @@ GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
 
         mMap!!.setOnInfoWindowClickListener(this)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-            if (ContextCompat.checkSelfPermission(
-                    requireContext(),
-                    Manifest.permission.ACCESS_FINE_LOCATION
-                ) == PackageManager.PERMISSION_GRANTED
-            ){
-                buildGoogleApiClient()
-                mMap!!.isMyLocationEnabled = true
-            }
-        } else {
-            buildGoogleApiClient()
-            mMap!!.isMyLocationEnabled = true
-        }
-    }
-
-    protected fun buildGoogleApiClient(){
-        mGoogleApiClient = GoogleApiClient.Builder(requireContext())
-            .addConnectionCallbacks(this)
-            .addOnConnectionFailedListener(this)
-            .addApi(LocationServices.API).build()
-        mGoogleApiClient!!.connect()
-    }
-
-    override fun onLocationChanged(location: Location) {
-        locationAtual = location
-        moveCamera(LatLng(location.latitude,location.longitude), 15f, "My Location")
-        if (ActivityCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            return
-        }
-        this.mMap!!.isMyLocationEnabled = true
-
-    }
-    private fun moveCamera(latlng : LatLng, zoom : Float, title : String){
-        CoroutineScope(Main).launch {
-            mMap!!.moveCamera(CameraUpdateFactory.newLatLngZoom(latlng, zoom))
-            if (!title.equals("My Location")) mMap!!.addMarker(MarkerOptions().position(latlng).title(title))
-        }
-    }
-
-    override fun onConnected(p0: Bundle?) {
-        mLocationRequest = LocationRequest()
-        mLocationRequest.interval = 1000
-        mLocationRequest.fastestInterval = 1000
-        mLocationRequest.priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
-        if (ContextCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED
-        ){
-            LocationServices.getFusedLocationProviderClient(requireContext())
-        }
-    }
-
-    override fun onConnectionSuspended(p0: Int) {
-
-    }
-
-    override fun onConnectionFailed(p0: ConnectionResult) {
-
     }
 
     override fun onInfoWindowClick(p0: Marker) {
-
 
         val lat = p0.position.latitude
         val lng = p0.position.longitude
         val rl : RelativeLayout = requireView().findViewById(R.id.rl)
         rl.visibility = View.VISIBLE
         val tv1 : TextView = requireView().findViewById(R.id.tv1)
-        tv1.setText(p0.title)
+        tv1.text = p0.title
         val tv2 : TextView = requireView().findViewById(R.id.tv2)
         tv2.setText(p0.snippet + " " + lat + " " + lng)
         val btn_rota = requireView().findViewById<Button>(R.id.btnrota)
         btn_rota.setOnClickListener {
             val location1 = LatLng(lat, lng)
             mMap!!.addMarker(
-                MarkerOptions().position(LatLng(locationAtual.latitude, locationAtual.longitude)).title("XXXX").icon(
+                MarkerOptions().position(LatLng(lastLocation.latitude, lastLocation.longitude)).title("XXXX").icon(
                     BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)))
-            mMap!!.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(locationAtual.latitude, locationAtual.longitude), 15f))
-            val URL = getDirectionURL(LatLng(locationAtual.latitude, locationAtual.longitude), location1)
+            mMap!!.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(lastLocation.latitude, lastLocation.longitude), 15f))
+            val URL = getDirectionURL(LatLng(lastLocation.latitude, lastLocation.longitude), location1)
             GetDirection(URL).execute()
         }
         val btn_exit = requireView().findViewById<Button>(R.id.btnexit)
@@ -308,38 +303,17 @@ GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
     }
 
     fun reservar(view: View) {}
-
-
-    fun run(url: String) {
-
-        val client = OkHttpClient()
-
-        val request = Request.Builder()
-            .url(url)
-            .build()
-
-        client.newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                Log.i("Falha", e.toString())
-            }
-            override fun onResponse(call: Call, response: Response) {
-
-                val json= response.body.string()
-
-                val jsonArray = JSONTokener(json).nextValue() as JSONArray
-
-                for (i in 0 until jsonArray.length()) {
-
-                    val x = jsonArray.getJSONObject(i).getString("nomeParque")
-                    val y = jsonArray.getJSONObject(i).getString("morada")
-                    val lat = jsonArray.getJSONObject(i).getString("latitude").toDouble()
-                    val lng = jsonArray.getJSONObject(i).getString("longitude").toDouble()
-
-                    hander.post(Runnable() {
-                        mMap!!.addMarker(MarkerOptions().position(LatLng(lat, lng)).title(x).snippet(y))
-                    })
-                }
-            }
-        })
+    override fun onLocationChanged(p0: Location) {
+        TODO("Not yet implemented")
     }
+
+    /**
+     * Function to wrap some bit of code that needs the context of the fragment NOT to be null
+     */
+    fun checkIfFragmentAttached(operation: Context.() -> Unit) {
+        if (isAdded && context != null) {
+            operation(requireContext())
+        }
+    }
+
 }
