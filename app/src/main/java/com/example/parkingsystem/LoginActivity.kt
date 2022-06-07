@@ -9,8 +9,9 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import com.example.parkingsystem.room.viewModel.UserViewModel
 import com.example.parkingsystem.api.*
+import com.example.parkingsystem.api.user.UserEndPoints
+import com.example.parkingsystem.model.post.Res
 import com.example.parkingsystem.room.application.UsersApplication
-import com.example.parkingsystem.room.dao.UserDao
 import com.example.parkingsystem.room.entity.User
 import retrofit2.Call
 import retrofit2.Callback
@@ -40,7 +41,7 @@ class LoginActivity : AppCompatActivity() {
             Toast.makeText(this@LoginActivity, "Preencha os campos de utilizador!", Toast.LENGTH_SHORT).show()
             return
         }
-        val request = ServiceBuilder.buildService(EndPoints::class.java)
+        val request = ServiceBuilder.buildService(UserEndPoints::class.java)
         val req = LoginRequest( email = email.text.toString(), password = password.text.toString() )
         val call = request.login(req)
 
