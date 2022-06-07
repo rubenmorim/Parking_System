@@ -1,5 +1,7 @@
 package com.example.parkingsystem
 
+import android.app.Activity
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -10,7 +12,8 @@ import androidx.activity.viewModels
 import com.example.parkingsystem.room.viewModel.UserViewModel
 import com.example.parkingsystem.api.*
 import com.example.parkingsystem.api.user.UserEndPoints
-import com.example.parkingsystem.model.post.Res
+import com.example.parkingsystem.model.Res
+import com.example.parkingsystem.model.post.LoginRequest
 import com.example.parkingsystem.room.application.UsersApplication
 import com.example.parkingsystem.room.entity.User
 import retrofit2.Call
@@ -19,18 +22,10 @@ import retrofit2.Response
 
 class LoginActivity : AppCompatActivity() {
 
-    private val userViewModel: UserViewModel by viewModels {
-        UserViewModel.UserViewModelFactory((application as UsersApplication).repository)
-    }
-
-
+    val newWordActivityRequestCode = 1
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-
-        //userViewModel.allUsers.observe(this, Observer { users ->
-
-        //})
 
     }
 
@@ -49,24 +44,16 @@ class LoginActivity : AppCompatActivity() {
             override fun onResponse(call: Call<Res>, response: Response<Res>) {
                 if (response.isSuccessful){
                     val res: Res = response.body()!!
-                    //Guardar o utilizador na storage
-
-                    val user = User( res.response.id, res.response.email, res.response.firstName, res.response.lastName, res.response.birthday )
-                    Log.d("userStorage", user.id.toString())
-                    userViewModel.insert(user)
-                    val users = userViewModel.allUsers
-
-                    Log.d("userStorage", userViewModel.allUsers.toString())
-                    userViewModel.allUsers
-
+                    val user = arrayOf<String>(res.response.id.toString(), res.response.email, res.response.firstName, res.response.lastName, res.response.birthday )
 
                     //Ir para a página activity main
-
+                    val intent = Intent(this@LoginActivity, MainActivity::class.java).apply {
+                        putExtra("USER", user)
+                    }
+                    startActivity(intent)
 
                     Toast.makeText(this@LoginActivity, res.response.id.toString() + " - " + res.response.firstName, Toast.LENGTH_SHORT).show()
                 }
-
-                Toast.makeText(this@LoginActivity, "ola:" +response.toString(), Toast.LENGTH_SHORT).show()
 
             }
             override fun onFailure(call: Call<Res>, t: Throwable) {

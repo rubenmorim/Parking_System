@@ -1,7 +1,7 @@
 package com.example.parkingsystem.api.user
 
-import com.example.parkingsystem.api.LoginRequest
-import com.example.parkingsystem.model.post.Res
+import com.example.parkingsystem.model.post.LoginRequest
+import com.example.parkingsystem.model.Res
 import retrofit2.Call
 import retrofit2.http.*
 
