@@ -1,4 +1,4 @@
-package com.example.parkingsystem.api
+package com.example.parkingsystem.model.post
 
 
 data class Res(
