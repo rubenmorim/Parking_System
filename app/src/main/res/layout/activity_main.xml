@@ -28,10 +28,13 @@
 
         <ImageView
             android:id="@+id/imageViewLinearLayoutTitle"
+            android:layout_width="25dp"
+            android:layout_height="35dp"
             android:layout_weight="1"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:src="@drawable/ic_user_solid">
+
+            android:scaleType="fitEnd"
+            android:src="@drawable/ic_user_solid"
+            app:tint="@color/cardview_dark_background">
 
         </ImageView>
 
@@ -42,7 +45,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/mainNavigationMenu"
-        android:layout_below="@+id/linearLayoutTitle">
+        android:layout_below="@+id/linearLayoutTitle"
+        >
 
 
     </FrameLayout>
@@ -52,6 +56,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
+        android:layout_marginTop="16dp"
+
         android:layout_alignParentBottom="true">
 
         <ImageButton
@@ -63,7 +69,8 @@
             android:backgroundTint="#00FFFFFF"
             android:scaleType="centerInside"
             android:layout_weight="1"
-            android:onClick="redirectToHome">
+            android:onClick="redirectToHome"
+            app:tint="@color/cardview_dark_background">
 
         </ImageButton>
 
@@ -76,7 +83,8 @@
             android:backgroundTint="#00FFFFFF"
             android:scaleType="centerInside"
             android:src="@drawable/ic_qrcode_solid"
-            android:onClick="redirectToQRCode">
+            android:onClick="redirectToQRCode"
+            app:tint="@color/cardview_dark_background">
 
         </ImageButton>
         <ImageButton
@@ -88,7 +96,8 @@
             android:backgroundTint="#00FFFFFF"
             android:scaleType="centerInside"
             android:layout_weight="1"
-            android:onClick="redirectToUser">
+            android:onClick="redirectToUser"
+            app:tint="@color/cardview_dark_background">
 
         </ImageButton>
         <ImageButton
@@ -100,7 +109,8 @@
             android:backgroundTint="#00FFFFFF"
             android:scaleType="centerInside"
             android:layout_weight="1"
-            android:onClick="redirectToGear">
+            android:onClick="redirectToGear"
+            app:tint="@color/cardview_dark_background">
 
         </ImageButton>
 

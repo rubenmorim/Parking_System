@@ -25,4 +25,5 @@
     <string name="modelo">Model</string>
     <string name="carPlate">Car plate</string>
     <string name="name">Name</string>
+    <string name="quick_operations">Quick operations</string>
 </resources>

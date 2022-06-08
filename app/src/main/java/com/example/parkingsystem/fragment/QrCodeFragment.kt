@@ -105,7 +105,6 @@ class QrCodeFragment : Fragment() {
     }
 
     private fun changeLicencePlate(view: View) {
-
         val request = ServiceBuilder.buildService(MatriculaEndpoint::class.java)
         val call = request.getMatriculaUtilizador(idUtilizador)
 

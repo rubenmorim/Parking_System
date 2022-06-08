@@ -26,6 +26,8 @@
         <entry key="..\:/Users/migue/AndroidStudioProjects/Parking_System/app/src/main/res/layout/fragment_home.xml" value="0.14722222222222223" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.22735507246376813" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.1875" />
+        <entry key="app/src/main/res/layout/fragment_qr_code.xml" value="0.30117753623188404" />
+        <entry key="app/src/main/res/layout/recyclerQrCodeQuickActionLine.xml" value="0.36354166666666665" />
       </map>
     </option>
   </component>

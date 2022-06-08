@@ -3,6 +3,7 @@ package com.example.parkingsystem
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -54,11 +55,13 @@ class MainActivity : AppCompatActivity() {
 
     fun redirectToHome(view: View) {
         findViewById<TextView>(R.id.textViewLinearLayoutTitle).text = "Home"
+        findViewById<ImageView>(R.id.imageViewLinearLayoutTitle).setImageResource(R.drawable.ic_house_solid)
         setFragment(homeFragment)
     }
 
     fun redirectToQRCode(view: View) {
         findViewById<TextView>(R.id.textViewLinearLayoutTitle).text = "QR Code"
+        findViewById<ImageView>(R.id.imageViewLinearLayoutTitle).setImageResource(R.drawable.ic_qrcode_solid)
         setFragment(qrCodeFragment)
     }
 

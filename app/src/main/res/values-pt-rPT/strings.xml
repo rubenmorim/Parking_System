@@ -22,4 +22,5 @@
     <string name="modelo">Modelo</string>
     <string name="carPlate">Matricula</string>
     <string name="name">Nome</string>
+    <string name="quick_operations">Operações rápidas</string>
 </resources>
