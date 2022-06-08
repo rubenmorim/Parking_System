@@ -25,4 +25,12 @@
     <string name="modelo">Model</string>
     <string name="carPlate">Car plate</string>
     <string name="name">Name</string>
+    <string name="choose_location">Choose Location...</string>
+    <string name="search">Search</string>
+    <string name="nome">NAME</string>
+    <string name="morada">ADDRESS</string>
+    <string name="reservar">Reserve</string>
+    <string name="rota">Route</string>
+    <string name="history">History</string>
+    <string name="current_location">Current Location</string>
 </resources>

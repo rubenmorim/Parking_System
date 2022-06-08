@@ -77,7 +77,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback, LocationListener, GoogleMap
 
     companion object {
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1
-        // private const val REQUEST_CHECK_SETTINGS = 2
     }
 
 
@@ -115,6 +114,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, LocationListener, GoogleMap
         val request = ServiceBuilder.buildService(ParqueEndpoint::class.java)
         val call = request.getParques()
 
+        // get park list
         call.enqueue(object : Callback<List<Parque>> {
             override fun onResponse(call: Call<List<Parque>>, response: Response<List<Parque>>) {
 
@@ -156,6 +156,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, LocationListener, GoogleMap
         return v
     }
 
+    // search Location (searchBar)
     private fun searchLocation() {
         val locationSearch: EditText = requireView().findViewById(R.id.et_search)
         val location: String = locationSearch.text.toString().trim()
@@ -173,7 +174,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, LocationListener, GoogleMap
 
             val address = addressList!![0]
             val latLng = LatLng(address.latitude, address.longitude)
-            mMap!!.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10f))
+            mMap!!.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12f))
         }
     }
 
@@ -196,10 +197,12 @@ class HomeFragment : Fragment(), OnMapReadyCallback, LocationListener, GoogleMap
     }
 
 
+    //API for Routes
     private fun getDirectionURL(origin: LatLng, dest: LatLng) : String{
         return "https://maps.googleapis.com/maps/api/directions/json?origin=${origin.latitude},${origin.longitude}&destination=${dest.latitude},${dest.longitude}&sensor=false&mode=driving&key=AIzaSyBmtZXVwPpAqRuMkOOfQlsrCUD-RsIBT_0"
     }
 
+    //Get Route
     inner class GetDirection(val url : String) : AsyncTask<Void, Void, List<List<LatLng>>>() {
         override fun doInBackground(vararg p0: Void?): List<List<LatLng>> {
             val client = OkHttpClient()
@@ -234,6 +237,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, LocationListener, GoogleMap
         }
     }
 
+    //Routes
     fun decodePolyline(encoded: String): List<LatLng> {
         val poly = ArrayList<LatLng>()
         var index = 0
@@ -276,6 +280,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, LocationListener, GoogleMap
 
     }
 
+    //Info Park
     override fun onInfoWindowClick(p0: Marker) {
 
         val lat = p0.position.latitude
@@ -290,7 +295,8 @@ class HomeFragment : Fragment(), OnMapReadyCallback, LocationListener, GoogleMap
         btn_rota.setOnClickListener {
             val location1 = LatLng(lat, lng)
             mMap!!.addMarker(
-                MarkerOptions().position(LatLng(lastLocation.latitude, lastLocation.longitude)).title("XXXX").icon(
+                MarkerOptions().position(LatLng(lastLocation.latitude, lastLocation.longitude)).title(getString(
+                                    R.string.current_location)).icon(
                     BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)))
             mMap!!.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(lastLocation.latitude, lastLocation.longitude), 15f))
             val URL = getDirectionURL(LatLng(lastLocation.latitude, lastLocation.longitude), location1)
@@ -302,7 +308,10 @@ class HomeFragment : Fragment(), OnMapReadyCallback, LocationListener, GoogleMap
         }
     }
 
+    //Create park reservation
     fun reservar(view: View) {}
+
+
     override fun onLocationChanged(p0: Location) {
         TODO("Not yet implemented")
     }
