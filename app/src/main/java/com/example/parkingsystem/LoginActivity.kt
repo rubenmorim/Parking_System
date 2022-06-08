@@ -3,6 +3,7 @@ package com.example.parkingsystem
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -20,11 +21,20 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
+        val signUpView = findViewById<View>(R.id.signUp)
+
+        signUpView.setOnClickListener {
+            val intent = Intent(this@LoginActivity, RegisterActivity::class.java)
+            startActivity(intent)
+        }
+
+
     }
 
     fun onClickLogin(view: View) {
         val email = findViewById<EditText>(R.id.editTextTextEmailAddress)
         val password = findViewById<EditText>(R.id.editTextTextPassword)
+
         if (email.text.toString() == "" || password.text.toString() == "") {
             Toast.makeText(this@LoginActivity, "Preencha os campos de utilizador!", Toast.LENGTH_SHORT).show()
             return
@@ -49,7 +59,7 @@ class LoginActivity : AppCompatActivity() {
                 }
             }
             override fun onFailure(call: Call<Res>, t: Throwable) {
-                Toast.makeText(this@LoginActivity, t.message, Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@LoginActivity, "Email ou password incorreto(s)", Toast.LENGTH_SHORT).show()
             }
         })
     }

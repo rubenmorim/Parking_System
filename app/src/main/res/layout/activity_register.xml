@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".RegisterActivity">
+
+
+    <ImageView
+        android:id="@+id/backImageView"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:contentDescription="@string/back"
+        android:src="@drawable/ic_baseline_arrow_back_24">
+
+    </ImageView>
+
+    <TextView
+        android:id="@+id/signUpTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/sign_up"
+        android:layout_marginStart="20dp"
+        android:layout_below="@id/backImageView"
+        android:fontFamily="@font/proxima_nova_font"
+        android:textSize="35sp">
+
+    </TextView>
+
+    <TextView
+        android:id="@+id/quickEasyTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/signUpTV"
+        android:layout_marginStart="20dp"
+        android:fontFamily="@font/proxima_nova_font"
+        android:text="@string/quickEasy"
+        android:layout_marginBottom="10dp"
+        android:textColor="#9B9999"
+        android:textSize="25sp">
+
+    </TextView>
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/quickEasyTV">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <TextView
+                android:id="@+id/personalInfoTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/proxima_nova_font"
+                android:text="@string/personalInfo"
+                android:textSize="25sp"
+                android:textStyle="bold">
+
+            </TextView>
+
+            <TextView
+                android:id="@+id/firtNameTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/proxima_nova_font"
+                android:text="@string/firstName"
+                android:textSize="19sp">
+
+            </TextView>
+
+            <EditText
+                android:id="@+id/editTextFirstName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:fontFamily="@font/proxima_nova_font"
+                android:inputType="textPersonName" />
+
+            <TextView
+                android:id="@+id/lastNameTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/proxima_nova_font"
+                android:text="@string/lastName"
+                android:textSize="19sp">
+
+            </TextView>
+
+            <EditText
+                android:id="@+id/editTextLastName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:fontFamily="@font/proxima_nova_font"
+                android:inputType="textPersonName" />
+
+            <TextView
+                android:id="@+id/emailTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/proxima_nova_font"
+
+                android:text="@string/email"
+                android:textSize="19sp">
+
+            </TextView>
+
+            <EditText
+                android:id="@+id/editTextEmailAddress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:fontFamily="@font/proxima_nova_font"
+                android:inputType="textEmailAddress" />
+
+            <TextView
+                android:id="@+id/passwordTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:fontFamily="@font/proxima_nova_font"
+                android:text="@string/password"
+                android:textSize="19sp">
+
+            </TextView>
+
+            <EditText
+                android:id="@+id/editTextPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:fontFamily="@font/proxima_nova_font"
+                android:inputType="textPassword" />
+
+            <TextView
+                android:id="@+id/birthdayTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:fontFamily="@font/proxima_nova_font"
+                android:text="@string/birthday"
+                android:textSize="19sp">
+
+            </TextView>
+
+            <EditText
+                android:id="@+id/editTextBirthday"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:fontFamily="@font/proxima_nova_font"
+                android:inputType="date" />
+
+            <TextView
+                android:id="@+id/carInfoTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:fontFamily="@font/proxima_nova_font"
+                android:text="@string/carInfo"
+                android:textSize="25sp"
+                android:textStyle="bold">
+
+            </TextView>
+
+            <TextView
+                android:id="@+id/modeloTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/proxima_nova_font"
+                android:text="@string/name"
+                android:textSize="19sp">
+
+            </TextView>
+
+            <EditText
+                android:id="@+id/editTextCarName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:fontFamily="@font/proxima_nova_font"
+                android:inputType="textPersonName" />
+
+            <TextView
+                android:id="@+id/carPlateTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/proxima_nova_font"
+                android:text="@string/carPlate"
+                android:textSize="19sp">
+
+            </TextView>
+
+            <EditText
+                android:id="@+id/editTextCarPlate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:fontFamily="@font/proxima_nova_font"
+                android:inputType="textPersonName" />
+
+
+            <Button
+                android:id="@+id/registerButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="onClickRegister"
+                android:layout_marginTop="20dp"
+                android:backgroundTint="@color/base"
+                android:fontFamily="@font/proxima_nova_font"
+                android:text="@string/sign_up" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</RelativeLayout>

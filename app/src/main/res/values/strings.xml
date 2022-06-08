@@ -14,4 +14,15 @@
     <string name="password">Password</string>
     <string name="sign_in">Sign In</string>
     <string name="sign_up">Sign Up</string>
+    <string name="dontHaveAccount">Don\'t have an account?</string>
+    <string name="back">Back</string>
+    <string name="quickEasy">It’s quick and easy</string>
+    <string name="personalInfo">Personal info</string>
+    <string name="firstName">First name</string>
+    <string name="lastName">Last name</string>
+    <string name="birthday">Birthday</string>
+    <string name="carInfo">Car info</string>
+    <string name="modelo">Model</string>
+    <string name="carPlate">Car plate</string>
+    <string name="name">Name</string>
 </resources>
