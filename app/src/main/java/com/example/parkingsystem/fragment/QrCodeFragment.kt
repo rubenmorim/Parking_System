@@ -100,7 +100,7 @@ class QrCodeFragment : Fragment() {
             }
         })
     }
-
+    //teste
     //Change QR Code
     private fun setQrCode(licencePlate: String): Bitmap? {
         val data = licencePlate.trim()
