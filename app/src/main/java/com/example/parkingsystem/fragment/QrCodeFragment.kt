@@ -31,6 +31,13 @@ class QrCodeFragment(idUser: Long) : Fragment() {
     private lateinit var ivQRCode: ImageView
     private lateinit var buttonChangeCurrentVehicle: Button
     private var idUtilizador: Long = idUser
+    //private lateinit var parkingDetails: ParkingDetail
+
+    private fun setFragment(fragment: Fragment) {
+        val fragmentTransaction = parentFragmentManager.beginTransaction()
+        fragmentTransaction.replace(R.id.frameLayoutFragment, fragment)
+        fragmentTransaction.commit()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,6 +52,12 @@ class QrCodeFragment(idUser: Long) : Fragment() {
         }
 
         Toast.makeText(requireContext(), "IDUSER__: ${idUtilizador}", Toast.LENGTH_LONG).show()
+
+        //val button2: Button = v.findViewById(R.id.buttonPayments)
+        //button2.setOnClickListener{
+        //    parkingDetails = ParkingDetails()
+        //    setFragment(parkingDetails)
+        //}
 
         return v
     }

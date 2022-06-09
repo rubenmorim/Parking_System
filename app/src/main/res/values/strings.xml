@@ -14,6 +14,32 @@
     <string name="password">Password</string>
     <string name="sign_in">Sign In</string>
     <string name="sign_up">Sign Up</string>
+
+    //strings legacy
+    <string name="payment_parking_details">Payment Parking Details</string>
+    <string name="parque_7">Parque 7</string>
+    <string name="todo">TODO</string>
+    <string name="rua_falsa">Rua Falsa 123, Nossa Senhora Da Peneda</string>
+    <string name="textview">TextView</string>
+    <string name="vehicle">Vehicle:</string>
+    <string name="price_to_pay">Price to pay:</string>
+    <string name="time_elapsed">Time elapsed:</string>
+    <string name="entrance_date">Entrance date:</string>
+    <string name="entrance_time">Entrance time:</string>
+    <string name="returnB">Return</string>
+    <string name="help">help</string>
+    <string name="lang">lang</string>
+    <string name="notifications">notifications</string>
+    <string name="logout">logout</string>
+    <string name="language">Language</string>
+    <string name="notificationsT">Notifications</string>
+    <string name="helpT">Help</string>
+    <string name="log_out">Log out</string>
+    <string name="wallet">wallet</string>
+    <string name="vehiclesB">Vehicles</string>
+    <string name="vehiclesH">Vehicles</string>
+
+
     <string name="dontHaveAccount">Don\'t have an account?</string>
     <string name="back">Back</string>
     <string name="quickEasy">It’s quick and easy</string>

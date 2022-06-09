@@ -9,6 +9,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.parkingsystem.fragment.HomeFragment
+import com.example.parkingsystem.fragment.Profile
 import com.example.parkingsystem.fragment.QrCodeFragment
 import com.example.parkingsystem.room.application.UsersApplication
 import com.example.parkingsystem.room.entity.User
@@ -19,6 +20,7 @@ class MainActivity : AppCompatActivity() {
     // Fragments
     private lateinit var qrCodeFragment: QrCodeFragment
     private lateinit var homeFragment: HomeFragment
+    private lateinit var profile: Profile
 
     private val userViewModel: UserViewModel by viewModels {
         UserViewModel.UserViewModelFactory((application as UsersApplication).repository)
@@ -30,7 +32,6 @@ class MainActivity : AppCompatActivity() {
 
 
         val res = intent.getStringArrayExtra("USER")
-        Log.d("res", res.toString())
 
         //observer do utilizador
         userViewModel.allUsers.observe(this) { users ->
@@ -44,6 +45,7 @@ class MainActivity : AppCompatActivity() {
                     // Initialize fragments
                     qrCodeFragment = QrCodeFragment(it[0].id)
                     homeFragment = HomeFragment(it[0].id)
+                    profile = Profile()
                     Log.d("id:", it[0].id.toString())
                 }
             }
@@ -63,6 +65,9 @@ class MainActivity : AppCompatActivity() {
         }
 
         supportActionBar?.hide()
+
+        findViewById<TextView>(R.id.textViewLinearLayoutTitle).text = "Home"
+        setFragment(homeFragment)
     }
 
     private fun setFragment(fragment: Fragment) {
@@ -81,8 +86,13 @@ class MainActivity : AppCompatActivity() {
         setFragment(qrCodeFragment)
     }
 
-    fun redirectToUser(view: View) {}
+    fun redirectToUser(view: View) {
+        findViewById<TextView>(R.id.textViewLinearLayoutTitle).text = "Profile"
+        setFragment(profile)
+    }
+
     fun redirectToGear(view: View) {}
+
 }
 
 
