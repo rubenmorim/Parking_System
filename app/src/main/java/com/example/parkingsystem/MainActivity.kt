@@ -44,11 +44,11 @@ class MainActivity : AppCompatActivity() {
                     // Initialize fragments
                     qrCodeFragment = QrCodeFragment(it[0].id)
                     homeFragment = HomeFragment(it[0].id)
-                    Log.d("id:", it[0].id.toString())
                 }
             }
         }
 
+        //Lógica de inserção no Room
         if (res != null) {
             val id = res[0]?.toLong()
             val email = res[1]

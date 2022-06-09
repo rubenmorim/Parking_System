@@ -316,7 +316,9 @@ class HomeFragment(idUser: Long) : Fragment(), OnMapReadyCallback, LocationListe
     }
 
     //Create park reservation
-    fun reservar(view: View) {}
+    fun reservar(view: View) {
+
+    }
 
 
     override fun onLocationChanged(p0: Location) {
