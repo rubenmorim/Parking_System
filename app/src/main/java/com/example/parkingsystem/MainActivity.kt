@@ -66,8 +66,6 @@ class MainActivity : AppCompatActivity() {
 
         supportActionBar?.hide()
 
-        findViewById<TextView>(R.id.textViewLinearLayoutTitle).text = "Home"
-        setFragment(homeFragment)
     }
 
     private fun setFragment(fragment: Fragment) {

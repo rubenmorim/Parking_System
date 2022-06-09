@@ -52,4 +52,6 @@
     <string name="history">Histórico</string>
     <string name="wallet">Carteira</string>
     <string name="vehiclesB">Veículos</string>
+    <string name="home">Inicio</string>
+    <string name="vehiclesH">Veículos</string>
 </resources>
