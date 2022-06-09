@@ -26,11 +26,11 @@ import retrofit2.Callback
 import retrofit2.Response
 
 
-class QrCodeFragment : Fragment() {
+class QrCodeFragment(idUser: Long) : Fragment() {
 
     private lateinit var ivQRCode: ImageView
     private lateinit var buttonChangeCurrentVehicle: Button
-    private var idUtilizador: Long = 0
+    private var idUtilizador: Long = idUser
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,7 +44,7 @@ class QrCodeFragment : Fragment() {
            changeLicencePlate(v)
         }
 
-        idUtilizador = 1
+        Toast.makeText(requireContext(), "IDUSER__: ${idUtilizador}", Toast.LENGTH_LONG).show()
 
         return v
     }

@@ -25,4 +25,6 @@
     <string name="modelo">Model</string>
     <string name="carPlate">Car plate</string>
     <string name="name">Name</string>
+    <string name="home">Home</string>
+    <string name="qrCode">QR Code</string>
 </resources>

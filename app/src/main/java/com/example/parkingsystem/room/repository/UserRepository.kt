@@ -17,7 +17,7 @@ class UserRepository(private val userDao: UserDao) {
         return userDao.insert(user)
     }
 
-    //fun getByEmail(email: String):User?{
-       // return userDao.getByEmail(email)
-   // }
+    //fun getIdUser():List<Long>{
+    //   return userDao.getIdUser()
+   //}
 }

@@ -13,6 +13,8 @@ class UserViewModel(private val repository: UserRepository) : ViewModel() {
     // - Repository is completely separated from the UI through the ViewModel.
     val allUsers: LiveData<List<User>> = repository.allUsers.asLiveData()
 
+    //val loggedUser: List<Long> = repository.getIdUser()
+
     /**
      * Launching a new coroutine to insert the data in a non-blocking way
      */
