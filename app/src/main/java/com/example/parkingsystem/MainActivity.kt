@@ -1,5 +1,6 @@
 package com.example.parkingsystem
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -11,6 +12,7 @@ import androidx.fragment.app.Fragment
 import com.example.parkingsystem.fragment.HomeFragment
 import com.example.parkingsystem.fragment.QrCodeFragment
 import com.example.parkingsystem.room.application.UsersApplication
+import com.example.parkingsystem.room.entity.User
 import com.example.parkingsystem.room.viewModel.UserViewModel
 
 class MainActivity : AppCompatActivity() {
@@ -27,23 +29,40 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // Initialize fragments
-        qrCodeFragment = QrCodeFragment()
-        homeFragment = HomeFragment()
 
         val res = intent.getStringArrayExtra("USER")
+        Log.d("res", res.toString())
 
-        //Lógica de inserir no Room (Falta)
-        //val user = User( res?.get(0).toInt(), res.response.email, res.response.firstName, res.response.lastName, res.response.birthday )
-        //Log.d("userStorage", user.id.toString())
-        //userViewModel.insert(user)
-
+        //observer do utilizador
         userViewModel.allUsers.observe(this) { users ->
             users?.let {
-                //Lógica de logout (Falta)
-                Log.d("userStorage", users.toString())
+
+                //Lógica de logout
+                if (it.isEmpty() && res == null) {
+                    val intent = Intent(this@MainActivity, LoginActivity::class.java)
+                    startActivity(intent)
+                } else {
+                    // Initialize fragments
+                    qrCodeFragment = QrCodeFragment(it[0].id)
+                    homeFragment = HomeFragment(it[0].id)
+                    Log.d("id:", it[0].id.toString())
+                }
             }
         }
+
+        if (res != null) {
+            val id = res[0]?.toLong()
+            val email = res[1]
+            val firstName = res[2]
+            val lastName = res[3]
+            val birthday = res[4]
+
+            //Lógica de inserir no Room (Falta)
+            val user = User(id!!, email!!, firstName!!, lastName!!, birthday!!)
+            Log.d("userStorage", user.id.toString())
+            userViewModel.insert(user)
+        }
+
         supportActionBar?.hide()
     }
 
@@ -56,12 +75,14 @@ class MainActivity : AppCompatActivity() {
     fun redirectToHome(view: View) {
         findViewById<TextView>(R.id.textViewLinearLayoutTitle).text = "Home"
         findViewById<ImageView>(R.id.imageViewLinearLayoutTitle).setImageResource(R.drawable.ic_house_solid)
+        findViewById<TextView>(R.id.textViewLinearLayoutTitle).text = getString(R.string.home)
         setFragment(homeFragment)
     }
 
     fun redirectToQRCode(view: View) {
         findViewById<TextView>(R.id.textViewLinearLayoutTitle).text = "QR Code"
         findViewById<ImageView>(R.id.imageViewLinearLayoutTitle).setImageResource(R.drawable.ic_qrcode_solid)
+        findViewById<TextView>(R.id.textViewLinearLayoutTitle).text = getString(R.string.qrCode)
         setFragment(qrCodeFragment)
     }
 

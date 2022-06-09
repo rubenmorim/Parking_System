@@ -31,13 +31,11 @@ class HistoricoViewHolder(itemView : View): RecyclerView.ViewHolder(itemView){
     private val name: TextView = itemView.findViewById(R.id.tvNome)
     private val dataEntrada:TextView = itemView.findViewById(R.id.tvDataEntrada)
     private val dataSaida:TextView = itemView.findViewById(R.id.tvDataSaida)
-    //private val preco:TextView = itemView.findViewById(R.id.tvPreco)
 
     fun bind(historico: Historico) {
         name.text = historico.nomeParque
         dataEntrada.text = historico.entrada
         dataSaida.text = historico.saida
-        //preco.text = historico.preco.toString()
     }
 
 }

@@ -16,8 +16,8 @@ interface UserDao {
     @Query("DELETE FROM utilizador_table")
     suspend fun deleteAll(): Int
 
-    //@Query("SELECT * FROM utilizador WHERE email LIKE :email")
-    //fun getByEmail(email: String): User?
+    //@Query("SELECT id FROM utilizador_table")
+    //fun getIdUser(): List<Long>
 
     @Query("SELECT * FROM utilizador_table ORDER BY firstName DESC")
     fun getAllUsers(): Flow<List<User>>

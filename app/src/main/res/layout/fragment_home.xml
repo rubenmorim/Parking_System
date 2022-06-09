@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     tools:context=".fragment.HomeFragment">
 
+
     <fragment
         android:id="@+id/myMap"
         android:name="com.google.android.gms.maps.SupportMapFragment"
@@ -24,8 +25,10 @@
                 android:layout_margin="10dp"
                 android:layout_weight="1"
                 android:background="@color/white"
-                android:hint="      Search Location..."
+                android:padding="10dp"
+                android:hint="@string/choose_location"
                 android:inputType="textPersonName"
+                android:fontFamily="@font/proxima_nova_font"
                 android:textColor="@color/black" />
 
             <Button
@@ -34,7 +37,8 @@
                 android:layout_height="50dp"
                 android:layout_margin="10dp"
                 android:backgroundTint="@color/base"
-                android:text="Search"
+                android:fontFamily="@font/proxima_nova_font"
+                android:text="@string/search"
                 android:textColor="@color/white" />
 
 
@@ -50,7 +54,7 @@
         <RelativeLayout
             android:id="@+id/rl"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="180dp"
             android:layout_alignParentBottom="true"
             android:background="@color/white"
             android:visibility="invisible">
@@ -59,17 +63,18 @@
                 android:id="@+id/img"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_below="@+id/tv1"
                 android:src="@drawable/ic_park"/>
 
             <TextView
                 android:id="@+id/tv1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/img"
                 android:layout_margin="10dp"
                 android:textSize="15dp"
                 android:textStyle="bold"
-                android:text="NOME"/>
+                android:fontFamily="@font/proxima_nova_font"
+                android:text="@string/nome"/>
 
             <TextView
                 android:id="@+id/tv2"
@@ -78,29 +83,33 @@
                 android:layout_toRightOf="@id/img"
                 android:layout_below="@+id/tv1"
                 android:layout_margin="10dp"
-                android:text="MORADA" />
+                android:fontFamily="@font/proxima_nova_font"
+                android:text="@string/morada" />
 
             <Button
                 android:id="@+id/btnreserva"
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
-                android:backgroundTint="@color/base"
-                android:layout_alignParentRight="true"
                 android:layout_below="@+id/tv2"
-                android:layout_marginRight="10dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="35dp"
                 android:layout_marginBottom="10dp"
+                android:backgroundTint="@color/base"
+                android:fontFamily="@font/proxima_nova_font"
                 android:onClick="reservar"
-                android:text="Reservar" />
+                android:text="@string/reservar" />
 
             <Button
                 android:id="@+id/btnrota"
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
                 android:backgroundTint="@color/base"
-                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="20dp"
+                android:layout_toRightOf="@+id/img"
                 android:layout_below="@+id/tv2"
                 android:layout_marginBottom="10dp"
-                android:text="Rota" />
+                android:fontFamily="@font/proxima_nova_font"
+                android:text="@string/rota" />
 
             <Button
                 android:id="@+id/btnexit"
@@ -110,6 +119,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="10dp"
                 android:backgroundTint="@color/white"
+                android:fontFamily="@font/proxima_nova_font"
                 android:textColor="#AEAEAE"
                 android:text="X" />
 

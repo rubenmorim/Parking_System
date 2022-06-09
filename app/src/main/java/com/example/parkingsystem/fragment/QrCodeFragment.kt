@@ -26,11 +26,11 @@ import retrofit2.Callback
 import retrofit2.Response
 
 
-class QrCodeFragment : Fragment() {
+class QrCodeFragment(idUser: Long) : Fragment() {
 
     private lateinit var ivQRCode: ImageView
     private lateinit var buttonChangeCurrentVehicle: Button
-    private var idUtilizador: Long = 0
+    private var idUtilizador: Long = idUser
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,7 +44,7 @@ class QrCodeFragment : Fragment() {
            changeLicencePlate(v)
         }
 
-        idUtilizador = 1
+        Toast.makeText(requireContext(), "IDUSER__: ${idUtilizador}", Toast.LENGTH_LONG).show()
 
         return v
     }
@@ -57,6 +57,7 @@ class QrCodeFragment : Fragment() {
         getMatriculaUtilizador(idUtilizador)
     }
 
+    // Get active user enrollment
     private fun getMatriculaUtilizador(idUtilizador: Long) {
 
         val request = ServiceBuilder.buildService(MatriculaEndpoint::class.java)
@@ -83,6 +84,7 @@ class QrCodeFragment : Fragment() {
         })
     }
 
+    //Change QR Code
     private fun setQrCode(licencePlate: String): Bitmap? {
         val data = licencePlate.trim()
         val writer = QRCodeWriter()
@@ -104,6 +106,7 @@ class QrCodeFragment : Fragment() {
         }
     }
 
+    // Change active vehicle
     private fun changeLicencePlate(view: View) {
         val request = ServiceBuilder.buildService(MatriculaEndpoint::class.java)
         val call = request.getMatriculaUtilizador(idUtilizador)
@@ -130,15 +133,12 @@ class QrCodeFragment : Fragment() {
                     listItems, checkedItem[0]
                 ) { dialog, which -> // update the selected item which is selected by the user
 
-                    //colocar matricula como ativa
+                    //put active vehicle
                     val request = ServiceBuilder.buildService(MatriculaEndpoint::class.java)
                     val call = request.updateMatricula(idUtilizador, listItems[which].toString())
 
                     call.enqueue(object : Callback<List<Matricula>> {
                         override fun onResponse(call: Call<List<Matricula>>, response: Response<List<Matricula>>) {
-
-                            Log.i("MIGUEL", response.body().toString())
-
                         }
                         override fun onFailure(call: Call<List<Matricula>>, t: Throwable) {
                             checkIfFragmentAttached {

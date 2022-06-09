@@ -23,4 +23,12 @@
     <string name="carPlate">Matricula</string>
     <string name="name">Nome</string>
     <string name="quick_operations">Operações rápidas</string>
+    <string name="choose_location">Escolher Local...</string>
+    <string name="search">Pesquisar</string>
+    <string name="nome">NOME</string>
+    <string name="morada">MORADA</string>
+    <string name="reservar">Reservar</string>
+    <string name="rota">Rota</string>
+    <string name="history">Histórico</string>
+    <string name="current_location">Localização Atual</string>
 </resources>

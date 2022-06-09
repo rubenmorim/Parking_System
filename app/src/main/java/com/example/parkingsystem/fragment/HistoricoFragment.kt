@@ -52,10 +52,12 @@ class HistoricoFragment : Fragment() {
         val call = request.getHistoricoByUser(1)
         val recyclerView = v.findViewById<RecyclerView>(R.id.recyclerView)
 
+        //Get user history
         call.enqueue(object : Callback<List<Historico>> {
             override fun onResponse(call: Call<List<Historico>>, response: Response<List<Historico>>) {
                 if (response.isSuccessful){
                     recyclerView.apply {
+                        //Change HistoricoAdapter
                         setHasFixedSize(true)
                         layoutManager = LinearLayoutManager(requireContext())
                         adapter = HistoricoAdapter(response.body()!!)

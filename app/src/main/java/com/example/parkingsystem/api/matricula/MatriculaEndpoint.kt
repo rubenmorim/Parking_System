@@ -14,7 +14,7 @@ interface MatriculaEndpoint {
     @GET("/api/matricula/getMatriculaUtilizador/{id}")
     fun getMatriculaUtilizador(@Path("id") id: Long): Call<List<Matricula>>
 
-    @GET("/api/matricula/updateMatriculaSelected?idUtilizador&idMatricula")
+    @GET("/api/matricula/updateMatriculaSelected?idUtilizador&matricula")
     fun updateMatricula(@Query("idUtilizador") idUtilizador: Long, @Query("matricula") matricula: String): Call<List<Matricula>>
 
     @FormUrlEncoded
