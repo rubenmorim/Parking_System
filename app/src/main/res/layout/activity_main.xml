@@ -26,15 +26,6 @@
 
         </TextView>
 
-        <ImageView
-            android:id="@+id/imageViewLinearLayoutTitle"
-            android:layout_weight="1"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:src="@drawable/ic_user_solid">
-
-        </ImageView>
-
     </LinearLayout>
 
     <FrameLayout
@@ -89,18 +80,6 @@
             android:scaleType="centerInside"
             android:layout_weight="1"
             android:onClick="redirectToUser">
-
-        </ImageButton>
-        <ImageButton
-            android:id="@+id/buttonRedirectGear"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@drawable/ic_gear_solid"
-            android:adjustViewBounds="true"
-            android:backgroundTint="#00FFFFFF"
-            android:scaleType="centerInside"
-            android:layout_weight="1"
-            android:onClick="redirectToGear">
 
         </ImageButton>
 
