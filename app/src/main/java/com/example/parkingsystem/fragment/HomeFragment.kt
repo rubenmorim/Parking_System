@@ -17,6 +17,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import com.example.parkingsystem.GoogleMapDTO
@@ -24,6 +25,8 @@ import com.example.parkingsystem.R
 import com.example.parkingsystem.api.ServiceBuilder
 import com.example.parkingsystem.api.parque.ParqueEndpoint
 import com.example.parkingsystem.model.Parque
+import com.example.parkingsystem.room.application.UsersApplication
+import com.example.parkingsystem.room.viewModel.UserViewModel
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationResult
@@ -40,7 +43,8 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class HomeFragment : Fragment(), OnMapReadyCallback, LocationListener, GoogleMap.OnInfoWindowClickListener {
+
+class HomeFragment(idUser: Long) : Fragment(), OnMapReadyCallback, LocationListener, GoogleMap.OnInfoWindowClickListener {
 
     private var mMap: GoogleMap? = null
     private val hander = Handler()
@@ -50,6 +54,9 @@ class HomeFragment : Fragment(), OnMapReadyCallback, LocationListener, GoogleMap
 
     private lateinit var locationCallback: LocationCallback
     private lateinit var locationRequest: com.google.android.gms.location.LocationRequest
+
+    private var idUtilizador: Long = idUser
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {

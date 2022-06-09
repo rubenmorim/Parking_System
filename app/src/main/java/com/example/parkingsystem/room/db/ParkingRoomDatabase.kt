@@ -29,9 +29,6 @@ abstract class ParkingRoomDatabase : RoomDatabase() {
 
                     // Delete all content here.
                     userDao.deleteAll()
-
-                    val user = User(0,"email", "name", "last", "12/10/1998")
-                    userDao.insert(user)
                 }
             }
         }
