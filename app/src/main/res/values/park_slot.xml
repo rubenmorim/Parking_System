@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="park_slot">
+        <item>00:15h</item>
+        <item>00:30h</item>
+        <item>01:00h</item>
+        <item>01:30h</item>
+        <item>02:00h</item>
+    </string-array>
+</resources>

@@ -102,7 +102,7 @@ class MainActivity : AppCompatActivity() {
 
     fun redirectToUser(view: View) {
         findViewById<TextView>(R.id.textViewLinearLayoutTitle).text = getString(R.string.profile)
-        setFragment(profile)
+        setFragment(profile, mapOf())
     }
 
 

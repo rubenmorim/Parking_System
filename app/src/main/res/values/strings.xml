@@ -69,5 +69,6 @@
     <string name="park_detail_error">There was an error fetching the park data</string>
 
 
-    <string name="profile">Profile</string>
+    <string name="profile" translatable="false">Profile</string>
+    <string name="indique_o_tempo_pretendido">Set the desired time slot</string>
 </resources>
