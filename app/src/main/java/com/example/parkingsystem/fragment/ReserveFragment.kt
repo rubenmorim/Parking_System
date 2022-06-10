@@ -1,29 +1,28 @@
 package com.example.parkingsystem.fragment
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.ImageView
+import android.widget.TextView
+import com.example.parkingsystem.MainActivity
 import com.example.parkingsystem.R
-
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+import kotlin.math.log
 
 
-class ReserveFragment(idUser: Long) : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+class ReserveFragment(idUser: Long, idParque: Int, titulo: String) : Fragment() {
+
+    private var idUtilizador: Long = idUser
+    private var idPark: Int = idParque
+    private var title: String = titulo
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
+        (activity as MainActivity).findViewById<TextView>(R.id.textViewLinearLayoutTitle).text = title
     }
 
     override fun onCreateView(
@@ -31,7 +30,16 @@ class ReserveFragment(idUser: Long) : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_reserve, container, false)
+        val v: View = inflater.inflate(R.layout.fragment_home, container, false)
+
+        val backButton: ImageView = v.findViewById(R.id.backImageView)
+        backButton.setOnClickListener {
+            (activity as MainActivity).findViewById<TextView>(R.id.textViewLinearLayoutTitle).text = getString(R.string.home)
+
+        }
+
+
+        return v
     }
 
     companion object {

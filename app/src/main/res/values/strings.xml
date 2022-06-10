@@ -35,4 +35,7 @@
     <string name="rota">Route</string>
     <string name="history">History</string>
     <string name="current_location">Current Location</string>
+    <string name="day">Day</string>
+    <string name="hour">Hour</string>
+    <string name="submit">Submit</string>
 </resources>

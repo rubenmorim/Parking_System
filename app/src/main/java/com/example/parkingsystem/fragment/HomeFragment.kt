@@ -69,7 +69,6 @@ class HomeFragment(idUser: Long) : Fragment(), OnMapReadyCallback, LocationListe
         }
 
 
-
         locationCallback = object : LocationCallback() {
             override fun onLocationResult(p0: LocationResult) {
                 Log.d("**** SARA", p0.toString())
@@ -120,8 +119,6 @@ class HomeFragment(idUser: Long) : Fragment(), OnMapReadyCallback, LocationListe
         savedInstanceState: Bundle?
     ): View? {
 
-        reserveFragment = ReserveFragment(idUtilizador)
-
         val request = ServiceBuilder.buildService(ParqueEndpoint::class.java)
         val call = request.getParques()
 
@@ -168,14 +165,9 @@ class HomeFragment(idUser: Long) : Fragment(), OnMapReadyCallback, LocationListe
     }
 
     private fun setFragment(fragment: Fragment) {
-        val bundle = Bundle()
-        fragment
-
-
-
-        //val fragmentTransaction = supportFragmentManager.beginTransaction()
-        //fragmentTransaction.replace(R.id.frameLayoutFragment, fragment)
-        //fragmentTransaction.commit()
+        val fragmentTransaction = parentFragmentManager.beginTransaction()
+        fragmentTransaction.replace(R.id.frameLayoutFragment, fragment)
+        fragmentTransaction.commit()
     }
 
     // search Location (searchBar)
@@ -204,6 +196,7 @@ class HomeFragment(idUser: Long) : Fragment(), OnMapReadyCallback, LocationListe
 
         val mapFragment = childFragmentManager.findFragmentById(R.id.myMap) as SupportMapFragment?
         mapFragment?.getMapAsync(this)
+
 
         super.onViewCreated(view, savedInstanceState)
     }
@@ -328,11 +321,15 @@ class HomeFragment(idUser: Long) : Fragment(), OnMapReadyCallback, LocationListe
         btn_exit.setOnClickListener {
             rl.visibility = View.INVISIBLE
         }
-    }
 
-    //Create park reservation
-    fun reservar(view: View) {
-
+        //Create park reservation
+        val btnReserva = requireView().findViewById<Button>(R.id.btnreserva)
+        btnReserva.setOnClickListener {
+            val idparque = p0.id.replace("m", "").toInt()
+            val titlulo = p0.title!!
+            reserveFragment = ReserveFragment(idUtilizador, idparque, titlulo)
+            setFragment(reserveFragment)
+        }
     }
 
 
