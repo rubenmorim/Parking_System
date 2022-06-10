@@ -16,14 +16,16 @@
     <string name="quickEasy">Rápido e fácil</string>
     <string name="personalInfo">Informação pessoal</string>
     <string name="firstName">Primeiro nome</string>
-    <string name="lastName">Ultimo nome</string>
+    <string name="lastName">Último nome</string>
     <string name="birthday">Data de nascimento</string>
     <string name="carInfo">Informação do veículo</string>
     <string name="modelo">Modelo</string>
     <string name="carPlate">Matricula</string>
     <string name="name">Nome</string>
+    <string name="home">Home</string>
+    <string name="qrCode">QR Code</string>
     <string name="quick_operations">Operações rápidas</string>
-    <string name="choose_location">Escolher Local...</string>
+    <string name="choose_location">Escolher Local…</string>
     <string name="search">Pesquisar</string>
     <string name="nome">NOME</string>
     <string name="morada">MORADA</string>
@@ -31,4 +33,6 @@
     <string name="rota">Rota</string>
     <string name="history">Histórico</string>
     <string name="current_location">Localização Atual</string>
+    <string name="parking">Parque</string>
+    <string name="park_detail_error">Ocorreu um erro ao obter os dados do parque</string>
 </resources>

@@ -5,7 +5,6 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,9 +13,11 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.example.parkingsystem.MainActivity
 import com.example.parkingsystem.R
 import com.example.parkingsystem.api.ServiceBuilder
 import com.example.parkingsystem.api.matricula.MatriculaEndpoint
+import com.example.parkingsystem.global.Global
 import com.example.parkingsystem.model.Matricula
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.WriterException
@@ -28,9 +29,11 @@ import retrofit2.Response
 
 class QrCodeFragment(idUser: Long) : Fragment() {
 
-    private lateinit var ivQRCode: ImageView
-    private lateinit var buttonChangeCurrentVehicle: Button
-    private var idUtilizador: Long = idUser
+    private lateinit var ivQRCode:                      ImageView
+    private lateinit var buttonChangeCurrentVehicle:    Button
+    private var idUtilizador: Long =                    idUser
+    private var globalLicencePlate: String =            ""
+    private lateinit var parkFragment:                  ParkFragment
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,6 +45,12 @@ class QrCodeFragment(idUser: Long) : Fragment() {
         val button: Button = v.findViewById(R.id.buttonChangeCurrentVehicle)
         button.setOnClickListener {
            changeLicencePlate(v)
+        }
+
+        parkFragment = ParkFragment()
+        val image: ImageView = v.findViewById(R.id.qrCodeImageView)
+        image.setOnClickListener {
+            redirectToPark(v)
         }
 
         Toast.makeText(requireContext(), "IDUSER__: ${idUtilizador}", Toast.LENGTH_LONG).show()
@@ -189,15 +198,37 @@ class QrCodeFragment(idUser: Long) : Fragment() {
      */
     private fun setQRCodeState(state: Boolean, licencePlate: String?) {
         if(state) {
+            if (licencePlate != null) {
+                globalLicencePlate = licencePlate
+            }
             requireView().findViewById<TextView>(R.id.textViewLicencePlate).text = licencePlate
             requireView().findViewById<ImageView>(R.id.qrCodeImageView)
                 .setImageBitmap(setQrCode(licencePlate!!))
             requireView().findViewById<TextView>(R.id.textViewInfo).visibility = View.GONE
         } else {
+            globalLicencePlate = ""
             requireView().findViewById<TextView>(R.id.textViewLicencePlate).setText(R.string.no_vehicles_configured_yet)
             requireView().findViewById<ImageView>(R.id.qrCodeImageView)
                 .setImageResource(R.drawable.ic_car_not_found)
             requireView().findViewById<TextView>(R.id.textViewInfo).visibility = View.VISIBLE
+        }
+    }
+
+    private fun redirectToPark(view: View) {
+        if(globalLicencePlate == "") {
+            Toast.makeText(requireContext(), "É necessário selecionar um veículo", Toast.LENGTH_SHORT ).show()
+        } else {
+            (activity as MainActivity).setFragment(
+                parkFragment,
+                mapOf(
+                    Global.PARAM_PARK_ID to "1",
+                    Global.PARAM_PARK_LICENCE_PLATE to globalLicencePlate
+                )
+            )
+
+            // Change title of main activity
+            (activity as MainActivity).findViewById<TextView>(R.id.textViewLinearLayoutTitle).text = getString(
+                R.string.parking)
         }
     }
 }

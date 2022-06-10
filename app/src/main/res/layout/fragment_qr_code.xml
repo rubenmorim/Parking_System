@@ -52,6 +52,7 @@
                         android:layout_width="300dp"
                         android:layout_height="300dp"
                         android:layout_below="@id/textViewInfo"
+                        android:onClick="redi"
                         android:padding="16dp"
                         android:src="@drawable/ic_car_not_found" />
                 </RelativeLayout>

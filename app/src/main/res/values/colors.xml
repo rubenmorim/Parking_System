@@ -8,4 +8,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="base">#5D3EA8</color>
+
+    <color name="button_fade">#fff</color>
+    <color name="button_active">#67ad5b</color>
 </resources>

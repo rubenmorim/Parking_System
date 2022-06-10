@@ -29,7 +29,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-
         val res = intent.getStringArrayExtra("USER")
         Log.d("res", res.toString())
 
@@ -45,7 +44,7 @@ class MainActivity : AppCompatActivity() {
                     // Initialize fragments
                     qrCodeFragment = QrCodeFragment(it[0].id)
                     homeFragment = HomeFragment(it[0].id)
-                    Log.d("id:", it[0].id.toString())
+                    Log.d("LUIS:", it[0].id.toString())
                 }
             }
         }
@@ -66,24 +65,34 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.hide()
     }
 
-    private fun setFragment(fragment: Fragment) {
+    fun setFragment(fragment: Fragment, argList: Map<String, String>?) {
+
+        val bundle = Bundle()
+
+        // Detect if we want to send some data to the fragment
+        if (argList != null && argList.isNotEmpty()) {
+            for (arg in argList) {
+                bundle.putString(arg.key, arg.value)
+            }
+
+            // Set the arguments
+            fragment.arguments = bundle;
+        }
         val fragmentTransaction = supportFragmentManager.beginTransaction()
         fragmentTransaction.replace(R.id.frameLayoutFragment, fragment)
         fragmentTransaction.commit()
     }
 
     fun redirectToHome(view: View) {
-        findViewById<TextView>(R.id.textViewLinearLayoutTitle).text = "Home"
         findViewById<ImageView>(R.id.imageViewLinearLayoutTitle).setImageResource(R.drawable.ic_house_solid)
         findViewById<TextView>(R.id.textViewLinearLayoutTitle).text = getString(R.string.home)
-        setFragment(homeFragment)
+        setFragment(homeFragment, mapOf())
     }
 
     fun redirectToQRCode(view: View) {
-        findViewById<TextView>(R.id.textViewLinearLayoutTitle).text = "QR Code"
         findViewById<ImageView>(R.id.imageViewLinearLayoutTitle).setImageResource(R.drawable.ic_qrcode_solid)
         findViewById<TextView>(R.id.textViewLinearLayoutTitle).text = getString(R.string.qrCode)
-        setFragment(qrCodeFragment)
+        setFragment(qrCodeFragment, mapOf())
     }
 
     fun redirectToUser(view: View) {}
