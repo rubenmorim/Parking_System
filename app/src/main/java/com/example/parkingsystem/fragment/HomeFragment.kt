@@ -55,6 +55,8 @@ class HomeFragment(idUser: Long) : Fragment(), OnMapReadyCallback, LocationListe
     private lateinit var locationCallback: LocationCallback
     private lateinit var locationRequest: com.google.android.gms.location.LocationRequest
 
+    private lateinit var reserveFragment: ReserveFragment
+
     private var idUtilizador: Long = idUser
 
 
@@ -118,6 +120,8 @@ class HomeFragment(idUser: Long) : Fragment(), OnMapReadyCallback, LocationListe
         savedInstanceState: Bundle?
     ): View? {
 
+        reserveFragment = ReserveFragment(idUtilizador)
+
         val request = ServiceBuilder.buildService(ParqueEndpoint::class.java)
         val call = request.getParques()
 
@@ -161,6 +165,17 @@ class HomeFragment(idUser: Long) : Fragment(), OnMapReadyCallback, LocationListe
             }
 
         return v
+    }
+
+    private fun setFragment(fragment: Fragment) {
+        val bundle = Bundle()
+        fragment
+
+
+
+        //val fragmentTransaction = supportFragmentManager.beginTransaction()
+        //fragmentTransaction.replace(R.id.frameLayoutFragment, fragment)
+        //fragmentTransaction.commit()
     }
 
     // search Location (searchBar)
