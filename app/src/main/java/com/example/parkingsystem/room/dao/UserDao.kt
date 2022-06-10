@@ -14,7 +14,7 @@ interface UserDao {
     suspend fun insert(user: User)
 
     @Query("DELETE FROM utilizador_table")
-    suspend fun deleteAll(): Int
+    suspend fun deleteAll()
 
     //@Query("SELECT id FROM utilizador_table")
     //fun getIdUser(): List<Long>

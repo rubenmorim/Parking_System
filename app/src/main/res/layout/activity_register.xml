@@ -22,10 +22,10 @@
         android:id="@+id/signUpTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/sign_up"
-        android:layout_marginStart="20dp"
         android:layout_below="@id/backImageView"
+        android:layout_marginStart="20dp"
         android:fontFamily="@font/proxima_nova_font"
+        android:text="@string/sign_up"
         android:textSize="35sp">
 
     </TextView>
@@ -218,10 +218,10 @@
                 android:id="@+id/registerButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:onClick="onClickRegister"
                 android:layout_marginTop="20dp"
                 android:backgroundTint="@color/base"
                 android:fontFamily="@font/proxima_nova_font"
+                android:onClick="onClickRegister"
                 android:text="@string/sign_up" />
 
         </LinearLayout>

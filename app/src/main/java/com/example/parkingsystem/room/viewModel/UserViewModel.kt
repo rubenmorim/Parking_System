@@ -18,8 +18,12 @@ class UserViewModel(private val repository: UserRepository) : ViewModel() {
     /**
      * Launching a new coroutine to insert the data in a non-blocking way
      */
-     fun insert(user: User) = viewModelScope.launch {
+    fun insert(user: User) = viewModelScope.launch {
         repository.insert(user)
+    }
+
+    fun deleteAll() = viewModelScope.launch {
+        repository.deleteAll()
     }
 
     class UserViewModelFactory(private val repository: UserRepository) : ViewModelProvider.Factory {
