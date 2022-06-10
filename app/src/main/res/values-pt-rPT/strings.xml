@@ -31,8 +31,32 @@
     <string name="morada">MORADA</string>
     <string name="reservar">Reservar</string>
     <string name="rota">Rota</string>
-    <string name="history">Histórico</string>
     <string name="current_location">Localização Atual</string>
     <string name="parking">Parque</string>
     <string name="park_detail_error">Ocorreu um erro ao obter os dados do parque</string>
+
+    <string name="payment_parking_details">Detalhes Pagamento Parque</string>
+    <string name="parque_7">Parque 7</string>
+    <string name="todo">TODO</string>
+    <string name="rua_falsa">Rua Falsa 123, Nossa Senhora Da Peneda</string>
+    <string name="textview">TextView</string>
+    <string name="vehicle">Veículo:</string>
+    <string name="price_to_pay">Preço a pagar:</string>
+    <string name="time_elapsed">Tempo decorrido:</string>
+    <string name="entrance_date">Data de entrada:</string>
+    <string name="entrance_time">Hora de entrada:</string>
+    <string name="returnB">Voltar</string>
+    <string name="help">Ajuda</string>
+    <string name="lang">Linguagem</string>
+    <string name="notifications">Notificações</string>
+    <string name="logout">Logout</string>
+    <string name="language">Linguagem</string>
+    <string name="notificationsT">Notificações</string>
+    <string name="helpT">Ajuda</string>
+    <string name="log_out">Log out</string>
+    <string name="history">Histórico</string>
+    <string name="wallet">Carteira</string>
+    <string name="vehiclesB">Veículos</string>
+    <string name="home">Inicio</string>
+    <string name="vehiclesH">Veículos</string>
 </resources>

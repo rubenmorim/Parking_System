@@ -10,6 +10,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.parkingsystem.fragment.HomeFragment
+import com.example.parkingsystem.fragment.Profile
 import com.example.parkingsystem.fragment.QrCodeFragment
 import com.example.parkingsystem.room.application.UsersApplication
 import com.example.parkingsystem.room.entity.User
@@ -20,6 +21,7 @@ class MainActivity : AppCompatActivity() {
     // Fragments
     private lateinit var qrCodeFragment: QrCodeFragment
     private lateinit var homeFragment: HomeFragment
+    private lateinit var profile: Profile
 
     private val userViewModel: UserViewModel by viewModels {
         UserViewModel.UserViewModelFactory((application as UsersApplication).repository)
@@ -30,21 +32,24 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val res = intent.getStringArrayExtra("USER")
-        Log.d("res", res.toString())
+        val isLoguedOut = intent.getBooleanExtra("LOGOUT", false)
+        if (isLoguedOut) {
+            userViewModel.deleteAll()
+        }
 
         //observer do utilizador
         userViewModel.allUsers.observe(this) { users ->
             users?.let {
 
                 //Lógica de logout
-                if (it.isEmpty() && res == null) {
+                if (it.isEmpty()) {
                     val intent = Intent(this@MainActivity, LoginActivity::class.java)
                     startActivity(intent)
                 } else {
                     // Initialize fragments
                     qrCodeFragment = QrCodeFragment(it[0].id)
                     homeFragment = HomeFragment(it[0].id)
-                    Log.d("LUIS:", it[0].id.toString())
+                    profile = Profile(it[0])
                 }
             }
         }
@@ -58,11 +63,11 @@ class MainActivity : AppCompatActivity() {
 
             //Lógica de inserir no Room (Falta)
             val user = User(id!!, email!!, firstName!!, lastName!!, birthday!!)
-            Log.d("userStorage", user.id.toString())
             userViewModel.insert(user)
         }
 
         supportActionBar?.hide()
+
     }
 
     fun setFragment(fragment: Fragment, argList: Map<String, String>?) {
@@ -95,8 +100,12 @@ class MainActivity : AppCompatActivity() {
         setFragment(qrCodeFragment, mapOf())
     }
 
-    fun redirectToUser(view: View) {}
-    fun redirectToGear(view: View) {}
+    fun redirectToUser(view: View) {
+        findViewById<TextView>(R.id.textViewLinearLayoutTitle).text = getString(R.string.profile)
+        setFragment(profile)
+    }
+
+
 }
 
 

@@ -17,6 +17,10 @@ class UserRepository(private val userDao: UserDao) {
         return userDao.insert(user)
     }
 
+    suspend fun deleteAll() {
+        return userDao.deleteAll()
+    }
+
     //fun getIdUser():List<Long>{
     //   return userDao.getIdUser()
    //}
