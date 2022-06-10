@@ -38,19 +38,6 @@ abstract class ParkingRoomDatabase : RoomDatabase() {
         @Volatile
         private var INSTANCE: ParkingRoomDatabase? = null
 
-        //fun getDatabase(context: Context): ParkingRoomDatabase {
-            // if the INSTANCE is not null, then return it,
-            // if it is, then create the database
-         //   if (INSTANCE == null) {
-         //       synchronized(this) {
-         //           // Pass the database to the INSTANCE
-         //           INSTANCE = buildDatabase(context)
-         //       }
-        //    }
-            // Return database.
-        //    return INSTANCE!!
-        //}
-
         fun getDatabase(
             context: Context,
             scope: CoroutineScope
@@ -72,13 +59,5 @@ abstract class ParkingRoomDatabase : RoomDatabase() {
             }
         }
 
-        private fun buildDatabase(context: Context): ParkingRoomDatabase {
-            return Room.databaseBuilder(
-                context.applicationContext,
-                ParkingRoomDatabase::class.java,
-                "parking_database"
-            )
-                .build()
-        }
     }
 }

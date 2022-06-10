@@ -32,21 +32,24 @@ class MainActivity : AppCompatActivity() {
 
 
         val res = intent.getStringArrayExtra("USER")
+        val isLoguedOut = intent.getBooleanExtra("LOGOUT", false)
+        if (isLoguedOut) {
+            userViewModel.deleteAll()
+        }
 
         //observer do utilizador
         userViewModel.allUsers.observe(this) { users ->
             users?.let {
 
                 //Lógica de logout
-                if (it.isEmpty() && res == null) {
+                if (it.isEmpty()) {
                     val intent = Intent(this@MainActivity, LoginActivity::class.java)
                     startActivity(intent)
                 } else {
                     // Initialize fragments
                     qrCodeFragment = QrCodeFragment(it[0].id)
                     homeFragment = HomeFragment(it[0].id)
-                    profile = Profile()
-                    Log.d("id:", it[0].id.toString())
+                    profile = Profile(it[0])
                 }
             }
         }
@@ -60,7 +63,6 @@ class MainActivity : AppCompatActivity() {
 
             //Lógica de inserir no Room (Falta)
             val user = User(id!!, email!!, firstName!!, lastName!!, birthday!!)
-            Log.d("userStorage", user.id.toString())
             userViewModel.insert(user)
         }
 
@@ -85,11 +87,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun redirectToUser(view: View) {
-        findViewById<TextView>(R.id.textViewLinearLayoutTitle).text = "Profile"
+        findViewById<TextView>(R.id.textViewLinearLayoutTitle).text = getString(R.string.profile)
         setFragment(profile)
     }
 
-    fun redirectToGear(view: View) {}
 
 }
 
