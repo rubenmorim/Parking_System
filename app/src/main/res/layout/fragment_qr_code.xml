@@ -88,6 +88,13 @@
                     android:orientation="vertical"
                     android:padding="16dp">
 
+
+                    <Button
+                        android:id="@+id/buttonScanQRCode"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/scan_qr_code" />
+
                     <Button
                         android:id="@+id/buttonChangeCurrentVehicle"
                         android:layout_width="match_parent"

@@ -71,4 +71,5 @@
 
     <string name="profile" translatable="false">Profile</string>
     <string name="indique_o_tempo_pretendido">Set the desired time slot</string>
+    <string name="scan_qr_code">Scan QR Code</string>
 </resources>

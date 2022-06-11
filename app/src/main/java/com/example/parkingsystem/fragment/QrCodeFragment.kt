@@ -13,6 +13,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.example.parkingsystem.CaptureQRCodeActivity
 import com.example.parkingsystem.MainActivity
 import com.example.parkingsystem.R
 import com.example.parkingsystem.api.ServiceBuilder
@@ -22,6 +23,9 @@ import com.example.parkingsystem.model.Matricula
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.WriterException
 import com.google.zxing.qrcode.QRCodeWriter
+import com.journeyapps.barcodescanner.ScanContract
+import com.journeyapps.barcodescanner.ScanIntentResult
+import com.journeyapps.barcodescanner.ScanOptions
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -29,48 +33,50 @@ import retrofit2.Response
 
 class QrCodeFragment(idUser: Long) : Fragment() {
 
-    private lateinit var ivQRCode:                      ImageView
-    private var idUtilizador: Long =                    idUser
-    private var globalLicencePlate: String =            ""
-    private lateinit var parkFragment:                  ParkFragment
+    private lateinit var ivQRCode:      ImageView
+    private lateinit var parkFragment:  ParkFragment
+    private var idUtilizador:           Long =      idUser
+    private var globalLicencePlate:     String =    ""
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
-        // Inflate the layout for this fragment
-        val v: View = inflater.inflate(R.layout.fragment_qr_code, container, false)
+    ): View? {
 
-        // Initializar park fragment
+        val view: View = inflater.inflate(R.layout.fragment_qr_code, container, false)
+
+        // Initialize park fragment
         parkFragment = ParkFragment()
 
-        // Event to change the current licence plate/vehicle
-        val button: Button = v.findViewById(R.id.buttonChangeCurrentVehicle)
-        button.setOnClickListener {
-           changeLicencePlate(v)
+        val buttonScanQRCode = view.findViewById<Button>(R.id.buttonScanQRCode)
+        buttonScanQRCode.setOnClickListener {
+            lerQrCode()
         }
 
-        // Set a click listener on the QR Code to simulate the reading in the machine
-        val image: ImageView = v.findViewById(R.id.qrCodeImageView)
-        image.setOnClickListener {
-            redirectToPark(v)
+        val buttonChangeCurrentVehicle = view.findViewById<Button>(R.id.buttonChangeCurrentVehicle)
+        buttonChangeCurrentVehicle.setOnClickListener {
+            changeLicencePlate(view)
         }
 
-        return v
-    }
+        val qrCodeImageView = view.findViewById<ImageView>(R.id.qrCodeImageView)
+        qrCodeImageView.setOnClickListener {
+            redirectToPark(view, "1")
+        }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         ivQRCode = view.findViewById(R.id.qrCodeImageView)
 
         // Set the default as car not found
-        checkIfFragmentAttached { setQRCodeState(false, null)  }
-        getMatriculaUtilizador(idUtilizador)
+        setQRCodeState(view, false, null)
+        getMatriculaUtilizador(view, idUtilizador)
+
+        return view
     }
 
     /**
      * Fetch all licence plates/vehicles associated with the user
      */
-    private fun getMatriculaUtilizador(idUtilizador: Long) {
+    private fun getMatriculaUtilizador(view: View, idUtilizador: Long) {
 
         val request = ServiceBuilder.buildService(MatriculaEndpoint::class.java)
         val call = request.getMatriculaUtilizador(idUtilizador)
@@ -83,7 +89,7 @@ class QrCodeFragment(idUser: Long) : Fragment() {
                 if(response.body()!!.isNotEmpty()) {
                     for (matriculas in response.body()!!) {
                         if(matriculas.isSelected) {
-                            setQRCodeState(true, matriculas.matricula)
+                            checkIfFragmentAttached { setQRCodeState(view,true, matriculas.matricula) }
                         }
                     }
                 }
@@ -155,6 +161,7 @@ class QrCodeFragment(idUser: Long) : Fragment() {
 
                     call.enqueue(object : Callback<List<Matricula>> {
                         override fun onResponse(call: Call<List<Matricula>>, response: Response<List<Matricula>>) {
+
                         }
                         override fun onFailure(call: Call<List<Matricula>>, t: Throwable) {
                             checkIfFragmentAttached {
@@ -166,7 +173,7 @@ class QrCodeFragment(idUser: Long) : Fragment() {
                     })
 
                     // Set the licence plate
-                    setQRCodeState(true, listItems[which])
+                    checkIfFragmentAttached { setQRCodeState(view, true, listItems[which]) }
                     // when selected an item the dialog should be closed with the dismiss method
                     dialog.dismiss()
                 }
@@ -203,35 +210,36 @@ class QrCodeFragment(idUser: Long) : Fragment() {
      * Function to change the layout (display QR Code instead of default "Not found", etc) of the fragment
      * based on the fact if a car is selected. state == true means a car is selecred
      */
-    private fun setQRCodeState(state: Boolean, licencePlate: String?) {
-        if(state) {
+    private fun setQRCodeState(view: View, state: Boolean, licencePlate: String?) {
+        if (state) {
             if (licencePlate != null) {
                 globalLicencePlate = licencePlate
             }
-            requireView().findViewById<TextView>(R.id.textViewLicencePlate).text = licencePlate
-            requireView().findViewById<ImageView>(R.id.qrCodeImageView)
+            view.findViewById<TextView>(R.id.textViewLicencePlate).text = licencePlate
+            view.findViewById<ImageView>(R.id.qrCodeImageView)
                 .setImageBitmap(setQrCode(licencePlate!!))
-            requireView().findViewById<TextView>(R.id.textViewInfo).visibility = View.GONE
+            view.findViewById<TextView>(R.id.textViewInfo).visibility = View.GONE
         } else {
             globalLicencePlate = ""
-            requireView().findViewById<TextView>(R.id.textViewLicencePlate).setText(R.string.no_vehicles_configured_yet)
-            requireView().findViewById<ImageView>(R.id.qrCodeImageView)
+            view.findViewById<TextView>(R.id.textViewLicencePlate)
+                .setText(R.string.no_vehicles_configured_yet)
+            view.findViewById<ImageView>(R.id.qrCodeImageView)
                 .setImageResource(R.drawable.ic_car_not_found)
-            requireView().findViewById<TextView>(R.id.textViewInfo).visibility = View.VISIBLE
+            view.findViewById<TextView>(R.id.textViewInfo).visibility = View.VISIBLE
         }
     }
 
     /**
      * Function to redirect to park fragment, where the user can confirm the park and start the process of parking
      */
-    private fun redirectToPark(view: View) {
+    private fun redirectToPark(view: View, parkID: String) {
         if(globalLicencePlate == "") {
             Toast.makeText(requireContext(), "É necessário selecionar um veículo", Toast.LENGTH_SHORT ).show()
         } else {
             (activity as MainActivity).setFragment(
                 parkFragment,
                 mapOf(
-                    Global.PARAM_PARK_ID to "1",
+                    Global.PARAM_PARK_ID to parkID,
                     Global.PARAM_PARK_LICENCE_PLATE to globalLicencePlate
                 )
             )
@@ -239,6 +247,40 @@ class QrCodeFragment(idUser: Long) : Fragment() {
             // Change title of main activity
             (activity as MainActivity).findViewById<TextView>(R.id.textViewLinearLayoutTitle).text = getString(
                 R.string.parking)
+        }
+    }
+
+    /**
+     * Function to trigger the scan of the QR Code
+     */
+    private fun lerQrCode() {
+        val options = ScanOptions()
+        options.captureActivity = CaptureQRCodeActivity::class.java
+        options.setDesiredBarcodeFormats(ScanOptions.QR_CODE)
+        options.setPrompt("Scan something")
+        options.setOrientationLocked(false)
+        options.setBeepEnabled(false)
+        barcodeLauncher.launch(options)
+    }
+
+    /**
+     *  Register the launcher and result handler
+     */
+    private val barcodeLauncher = registerForActivityResult(ScanContract()) {
+            result: ScanIntentResult ->
+        if (result.contents == null) {
+            checkIfFragmentAttached { Toast.makeText(requireContext(), "Cancelled", Toast.LENGTH_LONG).show()  }
+
+        } else {
+            checkIfFragmentAttached {
+
+                redirectToPark(requireView(),  result.contents)
+                Toast.makeText(
+                    requireContext(),
+                    result.contents,
+                    Toast.LENGTH_LONG
+                ).show()
+            }
         }
     }
 }
