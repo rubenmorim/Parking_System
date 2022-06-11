@@ -69,11 +69,12 @@
     <string name="park_detail_error">There was an error fetching the park data</string>
 
 
-    <string name="profile" translatable="false">Profile</string>
     <string name="indique_o_tempo_pretendido">Set the desired time slot</string>
     <string name="scan_qr_code">Scan QR Code</string>
     <string name="profile">Profile</string>
     <string name="day">Day</string>
     <string name="hour">Hour</string>
     <string name="submit">Submit</string>
+    <string name="futureReservations">Schedule reservations</string>
+    <string name="naoExisteReservas">There is no Schedule reservations</string>
 </resources>

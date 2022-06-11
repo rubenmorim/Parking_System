@@ -13,7 +13,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginTop="23dp"
         android:padding="16dp">
 
         <TextView
@@ -45,8 +44,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/mainNavigationMenu"
-        android:layout_below="@+id/linearLayoutTitle"
-        >
+        android:layout_below="@+id/linearLayoutTitle">
 
 
     </FrameLayout>

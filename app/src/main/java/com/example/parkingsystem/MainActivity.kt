@@ -102,9 +102,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun redirectToUser(view: View) {
+        findViewById<ImageView>(R.id.imageViewLinearLayoutTitle).setImageResource(R.drawable.ic_user_solid)
         findViewById<TextView>(R.id.textViewLinearLayoutTitle).text = getString(R.string.profile)
         setFragment(profile, mapOf())
     }
+
+    fun redirectToGear(view: View) {}
 
 
 }

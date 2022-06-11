@@ -13,11 +13,15 @@ import com.example.parkingsystem.adapter.HistoricoMatriculaAdapter
 import com.example.parkingsystem.api.ServiceBuilder
 import com.example.parkingsystem.api.matricula.MatriculaEndpoint
 import com.example.parkingsystem.model.Matricula
+import com.example.parkingsystem.room.entity.User
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class HistoricoMatricula : Fragment() {
+class HistoricoMatricula(idUser: Long) : Fragment() {
+
+
+    private var idUtilizador: Long = idUser
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,7 +36,7 @@ class HistoricoMatricula : Fragment() {
         val v: View = inflater.inflate(R.layout.fragment_historico_matricula, container, false)
 
         val request = ServiceBuilder.buildService(MatriculaEndpoint::class.java)
-        val call = request.getMatriculaUtilizador(1)
+        val call = request.getMatriculaUtilizador(idUtilizador)
         val recyclerView = v.findViewById<RecyclerView>(R.id.recyclerViewCarros)
 
         call.enqueue(object : Callback<List<Matricula>> {
