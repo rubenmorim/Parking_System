@@ -54,6 +54,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        //Lógica de inserção no Room
         if (res != null) {
             val id = res[0]?.toLong()
             val email = res[1]

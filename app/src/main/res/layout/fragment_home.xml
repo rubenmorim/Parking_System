@@ -96,7 +96,6 @@
                 android:layout_marginBottom="10dp"
                 android:backgroundTint="@color/base"
                 android:fontFamily="@font/proxima_nova_font"
-                android:onClick="reservar"
                 android:text="@string/reservar" />
 
             <Button

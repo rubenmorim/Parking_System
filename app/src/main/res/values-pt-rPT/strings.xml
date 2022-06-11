@@ -59,5 +59,9 @@
     <string name="home">Inicio</string>
     <string name="vehiclesH">Veículos</string>
     <string name="indique_o_tempo_pretendido">Indique o tempo pretendido</string>
-    <string name="scan_qr_code">Scan QR Code</string>
+    <string name="scan_qr_code">Digitalizar QR Code</string>
+    <string name="profile">Perfil</string>
+    <string name="day">Dia</string>
+    <string name="hour">Hora</string>
+    <string name="submit">Submeter</string>
 </resources>
