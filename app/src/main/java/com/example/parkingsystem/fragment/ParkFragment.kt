@@ -15,40 +15,22 @@ import com.example.parkingsystem.R
 import com.example.parkingsystem.api.ServiceBuilder
 import com.example.parkingsystem.api.estacionamento.EstacionamentoEndpoint
 import com.example.parkingsystem.api.parque.ParqueEndpoint
-import com.example.parkingsystem.api.user.UserEndPoints
 import com.example.parkingsystem.global.Global
-import com.example.parkingsystem.model.post.Estacionamento
 import com.example.parkingsystem.model.Parque
-import com.example.parkingsystem.model.User
-import com.example.parkingsystem.model.post.RegisterRequest
+import com.example.parkingsystem.model.post.Estacionamento
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.time.LocalDateTime
 
-
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-
-
-/**
- * A simple [Fragment] subclass.
- * Use the [ParkFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class ParkFragment : Fragment() , AdapterView.OnItemSelectedListener {
-    // TODO: Rename and change types of parameters
-    private var argList: Map<String, String>? = null
-    private var isLimited: Boolean = true
-    private var limit: Int = 30
-    private var licencePlate: String = ""
-    private var parkTimeSlot: Long = 0;
+
+    private var isLimited:      Boolean =   true
+    private var limit:          Int =       30
+    private var licencePlate:   String =    ""
+    private var parkTimeSlot:   Long =      0;
 
     private var estacionamento: Estacionamento = Estacionamento(0, 0, 0)
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -74,37 +56,36 @@ class ParkFragment : Fragment() , AdapterView.OnItemSelectedListener {
         }
 
         val spinner: Spinner = view.findViewById(R.id.fragmentSpinnerTimeSlot)
-        // Create an ArrayAdapter using the string array and a default spinner layout
+
+        // Set the event click on the spinner the event "override fun onItemSelected(...)"
         spinner.onItemSelectedListener = this
 
-
+        // Create an ArrayAdapter using the string array and a default spinner layout
         checkIfFragmentAttached {
             ArrayAdapter.createFromResource(
                 requireContext(),
                 R.array.park_slot,
                 android.R.layout.simple_spinner_item
             ).also { adapter ->
+
                 // Specify the layout to use when the list of choices appears
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+
                 // Apply the adapter to the spinner
                 spinner.adapter = adapter
             }
         }
 
-
         // Get the arguments passed to the fragment
         // In this case we need the park id, which is a Long with the name Global.PARAM_PARK_ID
-        val params = arguments
-        val parkID: Long = params!!.get(Global.PARAM_PARK_ID).toString().toLong()
+        val parkID: Long = requireArguments().get(Global.PARAM_PARK_ID).toString().toLong()
         estacionamento.idParque = parkID
         estacionamento.idUtilizador = 1
-        licencePlate = params!!.get(Global.PARAM_PARK_LICENCE_PLATE).toString()
+        licencePlate = requireArguments().get(Global.PARAM_PARK_LICENCE_PLATE).toString()
 
         // Execute http request to get data from the park
         val request = ServiceBuilder.buildService(ParqueEndpoint::class.java)
         val call = request.getParqueByID(parkID)
-
-
         call.enqueue(object : Callback<List<Parque>> {
             @RequiresApi(Build.VERSION_CODES.O)
             override fun onResponse(call: Call<List<Parque>>, response: Response<List<Parque>>) {
@@ -122,6 +103,9 @@ class ParkFragment : Fragment() , AdapterView.OnItemSelectedListener {
         return view
     }
 
+    /**
+     * Function to start te park process and write to the database that a parking has started
+     */
     private fun startPark() {
         val request = ServiceBuilder.buildService(EstacionamentoEndpoint::class.java)
         val req = Estacionamento(
@@ -147,10 +131,11 @@ class ParkFragment : Fragment() , AdapterView.OnItemSelectedListener {
 
     }
 
+    /**
+     * Function triggered whenever a user clicks on the spinner with the time slots
+     */
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onItemSelected(parent: AdapterView<*>, view: View?, pos: Int, id: Long) {
-        // An item was selected. You can retrieve the selected item using
-        // parent.getItemAtPosition(pos)
         checkIfFragmentAttached {
             parkTimeSlot = formatTimeSlot(parent.getItemAtPosition(pos).toString())
             setParkTimeData(parkTimeSlot)
@@ -184,6 +169,9 @@ class ParkFragment : Fragment() , AdapterView.OnItemSelectedListener {
         requireView().findViewById<TextView>(R.id.fragmentParkCar).text = licencePlate
     }
 
+    /**
+     * Function to set the start time and finish time of te parking process
+     */
     @RequiresApi(Build.VERSION_CODES.O)
     private fun setParkTimeData(timeSlot: Long) {
         val startTime = LocalDateTime.now()
@@ -191,6 +179,7 @@ class ParkFragment : Fragment() , AdapterView.OnItemSelectedListener {
         requireView().findViewById<TextView>(R.id.fragmentParkStartTime).text = getString(R.string.park_time, formatHours(startTime.hour), formatHours(startTime.minute))
         requireView().findViewById<TextView>(R.id.fragmentParkEndTime).text = getString(R.string.park_time, formatHours(endTime.hour), formatHours(endTime.minute))
     }
+
     /**
      * Format hours or minutes or seconds to show a 0 (zero) before the number if it is less than 9
      * so we don't end up having "14:3" instead of "14:03"
@@ -199,6 +188,11 @@ class ParkFragment : Fragment() , AdapterView.OnItemSelectedListener {
         return if(param <= 9) {"0$param"; } else "$param";
     }
 
+    /**
+     * Function to toggle if the user desired a time controlled park or undetermined park
+     * Time controlled means the user chooses a favorable time slot, starts the park and the parkign process ends whenever the time is spent
+     * Undefined means the user must stop manually the time and pays afterwards
+     */
     private fun toggleLimit(buttonLimit: Button, buttonLimitUndefined: Button) {
         isLimited = !isLimited
         val linearLayoutTimer = requireView().findViewById<LinearLayout>(R.id.fragmentMiddleDropDownSlot)
@@ -227,6 +221,9 @@ class ParkFragment : Fragment() , AdapterView.OnItemSelectedListener {
         }
     }
 
+    /**
+     * Function to convert time in string to minutes. "01:30h" into "90" minutes, for example
+     */
     private fun formatTimeSlot(timeSlot: String): Long {
         val timeSlotClean: String = timeSlot.replace("h","")
         val list = timeSlotClean.split(":")

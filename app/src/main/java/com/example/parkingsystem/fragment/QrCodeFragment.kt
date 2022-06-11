@@ -30,7 +30,6 @@ import retrofit2.Response
 class QrCodeFragment(idUser: Long) : Fragment() {
 
     private lateinit var ivQRCode:                      ImageView
-    private lateinit var buttonChangeCurrentVehicle:    Button
     private var idUtilizador: Long =                    idUser
     private var globalLicencePlate: String =            ""
     private lateinit var parkFragment:                  ParkFragment
@@ -42,24 +41,20 @@ class QrCodeFragment(idUser: Long) : Fragment() {
         // Inflate the layout for this fragment
         val v: View = inflater.inflate(R.layout.fragment_qr_code, container, false)
 
+        // Initializar park fragment
+        parkFragment = ParkFragment()
+
+        // Event to change the current licence plate/vehicle
         val button: Button = v.findViewById(R.id.buttonChangeCurrentVehicle)
         button.setOnClickListener {
            changeLicencePlate(v)
         }
 
-        parkFragment = ParkFragment()
+        // Set a click listener on the QR Code to simulate the reading in the machine
         val image: ImageView = v.findViewById(R.id.qrCodeImageView)
         image.setOnClickListener {
             redirectToPark(v)
         }
-
-        Toast.makeText(requireContext(), "IDUSER__: ${idUtilizador}", Toast.LENGTH_LONG).show()
-
-        //val button2: Button = v.findViewById(R.id.buttonPayments)
-        //button2.setOnClickListener{
-        //    parkingDetails = ParkingDetails()
-        //    setFragment(parkingDetails)
-        //}
 
         return v
     }
@@ -72,7 +67,9 @@ class QrCodeFragment(idUser: Long) : Fragment() {
         getMatriculaUtilizador(idUtilizador)
     }
 
-    // Get active user enrollment
+    /**
+     * Fetch all licence plates/vehicles associated with the user
+     */
     private fun getMatriculaUtilizador(idUtilizador: Long) {
 
         val request = ServiceBuilder.buildService(MatriculaEndpoint::class.java)
@@ -82,7 +79,7 @@ class QrCodeFragment(idUser: Long) : Fragment() {
             override fun onResponse(call: Call<List<Matricula>>, response: Response<List<Matricula>>) {
 
                 // If the response is empty, by default the image is "Car not found"
-                // set in the onCreateView
+                // set in the onCreateView, therefore we don't need to set it here again
                 if(response.body()!!.isNotEmpty()) {
                     for (matriculas in response.body()!!) {
                         if(matriculas.isSelected) {
@@ -93,13 +90,15 @@ class QrCodeFragment(idUser: Long) : Fragment() {
             }
             override fun onFailure(call: Call<List<Matricula>>, t: Throwable) {
                 checkIfFragmentAttached {
-                    Toast.makeText(requireContext(), "List of licence plate : ${t.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "There was an error fetching the vehicles: ${t.message}", Toast.LENGTH_SHORT).show()
                 }
             }
         })
     }
 
-    //Change QR Code
+    /**
+     * Function to generate a QR Code as Bitmap based on a given string
+     */
     private fun setQrCode(licencePlate: String): Bitmap? {
         val data = licencePlate.trim()
         val writer = QRCodeWriter()
@@ -121,7 +120,9 @@ class QrCodeFragment(idUser: Long) : Fragment() {
         }
     }
 
-    // Change active vehicle
+    /**
+     * Function to set up the dialog menu so the user can choose the licence plate/vehicle to use
+     */
     private fun changeLicencePlate(view: View) {
         val request = ServiceBuilder.buildService(MatriculaEndpoint::class.java)
         val call = request.getMatriculaUtilizador(idUtilizador)
@@ -220,6 +221,9 @@ class QrCodeFragment(idUser: Long) : Fragment() {
         }
     }
 
+    /**
+     * Function to redirect to park fragment, where the user can confirm the park and start the process of parking
+     */
     private fun redirectToPark(view: View) {
         if(globalLicencePlate == "") {
             Toast.makeText(requireContext(), "É necessário selecionar um veículo", Toast.LENGTH_SHORT ).show()
