@@ -55,6 +55,8 @@ class HomeFragment(idUser: Long) : Fragment(), OnMapReadyCallback, LocationListe
     private lateinit var locationCallback: LocationCallback
     private lateinit var locationRequest: com.google.android.gms.location.LocationRequest
 
+    private lateinit var reserveFragment: ReserveFragment
+
     private var idUtilizador: Long = idUser
 
 
@@ -65,7 +67,6 @@ class HomeFragment(idUser: Long) : Fragment(), OnMapReadyCallback, LocationListe
         checkIfFragmentAttached {
             fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
         }
-
 
 
         locationCallback = object : LocationCallback() {
@@ -163,6 +164,12 @@ class HomeFragment(idUser: Long) : Fragment(), OnMapReadyCallback, LocationListe
         return v
     }
 
+    private fun setFragment(fragment: Fragment) {
+        val fragmentTransaction = parentFragmentManager.beginTransaction()
+        fragmentTransaction.replace(R.id.frameLayoutFragment, fragment)
+        fragmentTransaction.commit()
+    }
+
     // search Location (searchBar)
     private fun searchLocation() {
         val locationSearch: EditText = requireView().findViewById(R.id.et_search)
@@ -189,6 +196,7 @@ class HomeFragment(idUser: Long) : Fragment(), OnMapReadyCallback, LocationListe
 
         val mapFragment = childFragmentManager.findFragmentById(R.id.myMap) as SupportMapFragment?
         mapFragment?.getMapAsync(this)
+
 
         super.onViewCreated(view, savedInstanceState)
     }
@@ -313,10 +321,16 @@ class HomeFragment(idUser: Long) : Fragment(), OnMapReadyCallback, LocationListe
         btn_exit.setOnClickListener {
             rl.visibility = View.INVISIBLE
         }
-    }
 
-    //Create park reservation
-    fun reservar(view: View) {}
+        //Create park reservation
+        val btnReserva = requireView().findViewById<Button>(R.id.btnreserva)
+        btnReserva.setOnClickListener {
+            val idparque = p0.id.replace("m", "").toInt()
+            val titlulo = p0.title!!
+            reserveFragment = ReserveFragment(idUtilizador, idparque, titlulo)
+            setFragment(reserveFragment)
+        }
+    }
 
 
     override fun onLocationChanged(p0: Location) {

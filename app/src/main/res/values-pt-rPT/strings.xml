@@ -22,8 +22,6 @@
     <string name="modelo">Modelo</string>
     <string name="carPlate">Matricula</string>
     <string name="name">Nome</string>
-    <string name="home">Home</string>
-    <string name="qrCode">QR Code</string>
     <string name="quick_operations">Operações rápidas</string>
     <string name="choose_location">Escolher Local…</string>
     <string name="search">Pesquisar</string>
@@ -59,4 +57,8 @@
     <string name="vehiclesB">Veículos</string>
     <string name="home">Inicio</string>
     <string name="vehiclesH">Veículos</string>
+    <string name="profile">Perfil</string>
+    <string name="day">Dia</string>
+    <string name="hour">Hora</string>
+    <string name="submit">Submeter</string>
 </resources>

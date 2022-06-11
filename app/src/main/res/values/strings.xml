@@ -70,4 +70,7 @@
 
 
     <string name="profile">Profile</string>
+    <string name="day">Day</string>
+    <string name="hour">Hour</string>
+    <string name="submit">Submit</string>
 </resources>

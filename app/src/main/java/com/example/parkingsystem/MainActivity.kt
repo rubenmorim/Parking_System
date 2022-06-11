@@ -54,6 +54,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        //Lógica de inserção no Room
         if (res != null) {
             val id = res[0]?.toLong()
             val email = res[1]
@@ -102,7 +103,7 @@ class MainActivity : AppCompatActivity() {
 
     fun redirectToUser(view: View) {
         findViewById<TextView>(R.id.textViewLinearLayoutTitle).text = getString(R.string.profile)
-        setFragment(profile)
+        setFragment(profile, mapOf())
     }
 
 
