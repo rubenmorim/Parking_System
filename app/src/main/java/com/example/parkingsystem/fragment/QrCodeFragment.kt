@@ -53,7 +53,6 @@ class QrCodeFragment(idUser: Long) : Fragment() {
             redirectToPark(v)
         }
 
-        Toast.makeText(requireContext(), "IDUSER__: ${idUtilizador}", Toast.LENGTH_LONG).show()
 
         //val button2: Button = v.findViewById(R.id.buttonPayments)
         //button2.setOnClickListener{

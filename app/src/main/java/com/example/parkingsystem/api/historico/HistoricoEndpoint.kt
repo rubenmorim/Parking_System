@@ -9,5 +9,5 @@ import retrofit2.http.Path
 interface HistoricoEndpoint {
 
     @GET("/api/estacionamento/gethistorico/{id}")
-    fun getHistoricoByUser(@Path("id") id: Int): Call<List<Historico>>
+    fun getHistoricoByUser(@Path("id") id: Long): Call<List<Historico>>
 }

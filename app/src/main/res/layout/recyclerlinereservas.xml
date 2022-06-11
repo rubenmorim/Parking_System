@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="10dp"
+    android:paddingStart="8dp"
+    android:paddingEnd="8dp">
+
+    <!--  titulo, data, numero  -->
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/base" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/imgP"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_park_black"/>
+
+
+            <TextView
+                android:id="@+id/tvNomeReserva"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_toRightOf="@+id/imgP"
+                android:fontFamily="@font/proxima_nova_font"
+                android:text="Parque da Avenida"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/tvDataEntradaReserva"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/imgP"
+                android:layout_below="@id/tvNomeReserva"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/white"
+                android:fontFamily="@font/proxima_nova_font"
+                android:textSize="12sp"
+                android:text="22/04/2022 10h30"/>
+
+            <TextView
+                android:id="@+id/tvDataSaidaReserva"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/imgP"
+                android:layout_below="@id/tvDataEntradaReserva"
+                android:textColor="@color/white"
+                android:fontFamily="@font/proxima_nova_font"
+                android:textSize="12sp"
+                android:text="22/04/2022 11h15"/>
+
+
+        </RelativeLayout>
+
+
+
+
+    </androidx.cardview.widget.CardView>
+
+
+
+</RelativeLayout>

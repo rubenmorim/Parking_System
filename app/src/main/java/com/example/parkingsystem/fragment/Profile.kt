@@ -20,6 +20,7 @@ class Profile(user: User) : Fragment() {
 
     private lateinit var historicoFragment: HistoricoFragment
     private lateinit var historicoMatricula: HistoricoMatricula
+    private lateinit var futureReservationsFragment: FutureReservationsFragment
 
     private var utilizador: User = user
 
@@ -36,7 +37,6 @@ class Profile(user: User) : Fragment() {
         // Inflate the layout for this fragment
         val v: View = inflater.inflate(R.layout.fragment_profile, container, false)
 
-        Log.d("user", utilizador.email)
 
         var nomeuser: TextView = v.findViewById(R.id.nomeUser)
         nomeuser.setText(utilizador.firstName + " " + utilizador.lastName)
@@ -45,17 +45,25 @@ class Profile(user: User) : Fragment() {
         email.setText(utilizador.email)
 
 
+        //Reservas agendadas
+        val buttonReserva: Button = v.findViewById(R.id.buttonReservas)
+        buttonReserva.setOnClickListener{
+            futureReservationsFragment = FutureReservationsFragment(utilizador.id)
+            setFragment(futureReservationsFragment)
+        }
+
+
         //Matriculas
         val button1: Button = v.findViewById(R.id.button4)
         button1.setOnClickListener{
-            historicoMatricula = HistoricoMatricula()
+            historicoMatricula = HistoricoMatricula(utilizador.id)
             setFragment(historicoMatricula)
         }
 
         //Historico
         val button2: Button = v.findViewById(R.id.button)
         button2.setOnClickListener{
-            historicoFragment = HistoricoFragment()
+            historicoFragment = HistoricoFragment(utilizador.id)
             setFragment(historicoFragment)
         }
 

@@ -73,4 +73,6 @@
     <string name="day">Day</string>
     <string name="hour">Hour</string>
     <string name="submit">Submit</string>
+    <string name="futureReservations">Schedule reservations</string>
+    <string name="naoExisteReservas">There is no Schedule reservations</string>
 </resources>
