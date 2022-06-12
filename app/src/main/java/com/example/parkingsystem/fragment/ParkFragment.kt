@@ -16,6 +16,7 @@ import com.example.parkingsystem.api.ServiceBuilder
 import com.example.parkingsystem.api.estacionamento.EstacionamentoEndpoint
 import com.example.parkingsystem.api.parque.ParqueEndpoint
 import com.example.parkingsystem.global.Global
+import com.example.parkingsystem.model.EstacionamentoAtual
 import com.example.parkingsystem.model.Parque
 import com.example.parkingsystem.model.post.Estacionamento
 import retrofit2.Call
@@ -29,8 +30,11 @@ class ParkFragment : Fragment() , AdapterView.OnItemSelectedListener {
     private var limit:          Int =       30
     private var licencePlate:   String =    ""
     private var parkTimeSlot:   Long =      0;
+    private var estacionamento: Estacionamento = Estacionamento()
+    private var parque: Parque = Parque()
+    private var estacionamentoAtual: EstacionamentoAtual = EstacionamentoAtual()
 
-    private var estacionamento: Estacionamento = Estacionamento(0, 0, 0)
+    private lateinit var parkOnGoingFragment: ParkOnGoingFragment
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,6 +42,8 @@ class ParkFragment : Fragment() , AdapterView.OnItemSelectedListener {
     ): View? {
 
         val view: View = inflater.inflate(R.layout.fragment_park, container, false)
+
+        parkOnGoingFragment = ParkOnGoingFragment()
 
         val buttonLimit = view.findViewById<Button>(R.id.fragmentParkButtonLimit)
         val buttonLimitUndefined = view.findViewById<Button>(R.id.fragmentParkButtonLimitUndefined)
@@ -84,20 +90,41 @@ class ParkFragment : Fragment() , AdapterView.OnItemSelectedListener {
         licencePlate = requireArguments().get(Global.PARAM_PARK_LICENCE_PLATE).toString()
 
         // Execute http request to get data from the park
-        val request = ServiceBuilder.buildService(ParqueEndpoint::class.java)
-        val call = request.getParqueByID(parkID)
-        call.enqueue(object : Callback<List<Parque>> {
+        val requestParkData = ServiceBuilder.buildService(ParqueEndpoint::class.java)
+        val callParkData = requestParkData.getParqueByID(parkID)
+        callParkData.enqueue(object : Callback<List<Parque>> {
             @RequiresApi(Build.VERSION_CODES.O)
             override fun onResponse(call: Call<List<Parque>>, response: Response<List<Parque>>) {
                 if (response.isSuccessful) {
 
                     // Get the details of a park and set them in the XML
-                    val parque: Parque = response.body()?.get(0)!!
+                    parque = response.body()?.get(0)!!
                     checkIfFragmentAttached { setParkData(parque) }
                 }
             }
             override fun onFailure(call: Call<List<Parque>>, t: Throwable) {
                 checkIfFragmentAttached {Toast.makeText(requireContext(), getString(R.string.park_detail_error) + t.message, Toast.LENGTH_LONG).show() }
+            }
+        })
+
+        // Execute http request to get data from the park
+        val requestParkOnGoing = ServiceBuilder.buildService(EstacionamentoEndpoint::class.java)
+        val callParkOnGoing = requestParkOnGoing.getEstacionamentoAtual(1)
+        callParkOnGoing.enqueue(object : Callback<EstacionamentoAtual> {
+            @RequiresApi(Build.VERSION_CODES.O)
+            override fun onResponse(call: Call<EstacionamentoAtual> , response: Response<EstacionamentoAtual>) {
+                if (response.isSuccessful) {
+                    estacionamentoAtual = response.body()!!
+
+                    if(estacionamentoAtual.estacionamentoAtual != null && !estacionamentoAtual.estacionamentoAtual!!.isPago) {
+                        // We have a on going park, therefore we need to redirect to the onGoingFrament
+
+                        redirectToOnGoingPark(view, estacionamentoAtual.estacionamentoAtual!!.idUtilizador.toString(), licencePlate)
+                    }
+                }
+            }
+            override fun onFailure(call: Call<EstacionamentoAtual>, t: Throwable) {
+                checkIfFragmentAttached {Toast.makeText(requireContext(), "Não há parques a decorrer", Toast.LENGTH_LONG).show() }
             }
         })
         return view
@@ -120,8 +147,7 @@ class ParkFragment : Fragment() , AdapterView.OnItemSelectedListener {
                 if (response.isSuccessful) {
 
                     // Ir para a página activity main
-                    val intent = Intent(requireContext(), MainActivity::class.java)
-                    startActivity(intent)
+                    redirectToOnGoingPark(requireView(), "1", licencePlate)
                 }
             }
             override fun onFailure(call: Call<Estacionamento>, t: Throwable) {
@@ -235,5 +261,23 @@ class ParkFragment : Fragment() , AdapterView.OnItemSelectedListener {
         // Integer.parseInt(list[1]) gives us the minutes already
         // Example: 01:30 => list[0] = 1 &  list[1] = 30 ----> list[0] * 60 = 60 min + list[1] = 30 => 90 minutes
         return (hours + minutes).toLong()
+    }
+
+    /**
+     * Function to redirect to on going park fragment
+     */
+    private fun redirectToOnGoingPark(view: View, userID: String, licencePlate: String) {
+
+        (activity as MainActivity).setFragment(
+            parkOnGoingFragment,
+            mapOf(
+                Global.PARAM_USER_ID to userID,
+                Global.PARAM_PARK_LICENCE_PLATE to licencePlate
+            )
+        )
+
+        // Change title of main activity
+        (activity as MainActivity).findViewById<TextView>(R.id.textViewLinearLayoutTitle).text = getString(
+            R.string.parking_on_going)
     }
 }

@@ -57,6 +57,7 @@
     <string name="history">History</string>
     <string name="current_location">Current Location</string>
     <string name="parking">Parking</string>
+    <string name="parking_on_going">On Going Parking</string>
     <string name="park_time" translatable="false">%1$s : %2$s</string>
     <string name="park_detail_error">There was an error fetching the park data</string>
     <string name="profile" translatable="false">Profile</string>

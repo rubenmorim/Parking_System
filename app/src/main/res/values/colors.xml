@@ -11,4 +11,6 @@
 
     <color name="button_fade">#fff</color>
     <color name="button_active">#67ad5b</color>
+    <color name="button_stop">#DC3545</color>
+    <color name="button_cancel">#6C757D</color>
 </resources>

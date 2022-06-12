@@ -69,4 +69,5 @@
     <string name="add_wallet">Por favor insira o numero do seu cartão</string>
     <string name="Insert">Criar</string>
     <string name="matriculaInserida">Matricula Inserida</string>
+    <string name="parking_on_going">Parque a decorrer</string>
 </resources>

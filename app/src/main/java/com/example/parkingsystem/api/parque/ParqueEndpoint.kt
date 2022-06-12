@@ -14,4 +14,5 @@ interface ParqueEndpoint {
 
     @GET("/api/parques/getParqueById?id")
     fun getParqueByID(@Query("id") id: Long): Call<List<Parque>>
+
 }

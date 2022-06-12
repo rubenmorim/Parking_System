@@ -20,6 +20,8 @@
         <entry key="..\:/Users/Ruben Morim/Desktop/3 ano/2semestre/CM/Trabalho Pratico Parking/Parking System/app/src/main/res/layout/recyclerlinematricula.xml" value="0.24010416666666667" />
         <entry key="..\:/Users/Ruben Morim/Desktop/3 ano/2semestre/CM/Trabalho Pratico Parking/Parking System/app/src/main/res/layout/recyclerlinereservas.xml" value="0.228125" />
         <entry key="..\:/Users/Ruben Morim/Desktop/3 ano/2semestre/CM/Trabalho Pratico Parking/Parking System/app/src/main/res/layout/selector_row.xml" value="0.24010416666666667" />
+        <entry key="app/src/main/res/layout/fragment_park.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/fragment_park_on_going.xml" value="0.36354166666666665" />
       </map>
     </option>
   </component>
