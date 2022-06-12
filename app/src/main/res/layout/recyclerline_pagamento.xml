@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/linear_pagamento"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+
+    <!--  titulo, data, numero  -->
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10sp"
+        android:backgroundTint="@color/base"
+        app:cardCornerRadius="20sp">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10sp"
+            android:src="@drawable/ic_baseline_creditcard" />
+
+        <TextView
+            android:id="@+id/tipoPagamento"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textSize="19dp"
+            android:textColor="#ffffff"
+            android:text="255-400100"
+            android:gravity="center_vertical|center"
+            />
+
+
+    <ImageView
+        android:id="@+id/img1"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginRight="15dp"
+        android:src="@drawable/ic_baseline_done_24" />
+
+
+</LinearLayout>
+
+
+    </androidx.cardview.widget.CardView>
+</RelativeLayout>

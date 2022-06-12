@@ -21,6 +21,7 @@ class Profile(user: User) : Fragment() {
     private lateinit var historicoFragment: HistoricoFragment
     private lateinit var historicoMatricula: HistoricoMatricula
     private lateinit var futureReservationsFragment: FutureReservationsFragment
+    private lateinit var walletFragment: WalletFragment
 
     private var utilizador: User = user
 
@@ -70,7 +71,8 @@ class Profile(user: User) : Fragment() {
         //Wallet
         val button3: Button = v.findViewById(R.id.button3)
         button3.setOnClickListener{
-
+            walletFragment = WalletFragment(utilizador.id)
+            setFragment(walletFragment)
         }
 
         //Logout
