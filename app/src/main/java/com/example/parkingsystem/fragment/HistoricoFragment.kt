@@ -1,5 +1,6 @@
 package com.example.parkingsystem.fragment
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -13,6 +14,7 @@ import com.example.parkingsystem.adapter.HistoricoAdapter
 import com.example.parkingsystem.api.ServiceBuilder
 import com.example.parkingsystem.api.historico.HistoricoEndpoint
 import com.example.parkingsystem.model.Historico
+import com.google.android.gms.location.LocationServices
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -32,6 +34,7 @@ class HistoricoFragment(idUser: Long) : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val v: View = inflater.inflate(R.layout.fragment_historico, container, false)
+
 
         val request = ServiceBuilder.buildService(HistoricoEndpoint::class.java)
         val call = request.getHistoricoByUser(idUtilizador)
@@ -53,11 +56,8 @@ class HistoricoFragment(idUser: Long) : Fragment() {
                 Toast.makeText(requireContext(), "${t.message}", Toast.LENGTH_SHORT).show()
             }
         })
-
         return v
     }
 
-    companion object {
 
-    }
 }

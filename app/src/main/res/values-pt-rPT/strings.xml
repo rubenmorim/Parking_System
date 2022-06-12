@@ -65,4 +65,8 @@
     <string name="submit">Submeter</string>
     <string name="futureReservations">Reservas agendadas</string>
     <string name="naoExisteReservas">Não tem reservas agendadas</string>
+    <string name="addpayment">Adicionar Pagamento</string>
+    <string name="add_wallet">Por favor insira o numero do seu cartão</string>
+    <string name="Insert">Criar</string>
+    <string name="matriculaInserida">Matricula Inserida</string>
 </resources>
