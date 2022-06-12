@@ -65,12 +65,21 @@
         android:layout_below="@id/cardView"
         android:padding="10dp">
 
+        <Button
+            android:id="@+id/buttonReservas"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:fontFamily="@font/proxima_nova_font"
+            android:drawableLeft="@drawable/ic_baseline_local_parking_24"
+            android:text="@string/futureReservations"/>
+
 
         <Button
             android:id="@+id/button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="3dp"
             android:fontFamily="@font/proxima_nova_font"
             android:drawableLeft="@drawable/ic__52426_history_icon"
             android:text="@string/history"/>
@@ -80,16 +89,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/proxima_nova_font"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="3dp"
             android:drawableLeft="@drawable/ic__72588_credit_card_icon"
             android:text="@string/wallet"/>
+
+
 
         <Button
             android:id="@+id/button4"
             android:layout_width="match_parent"
             android:fontFamily="@font/proxima_nova_font"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="3dp"
             android:drawableLeft="@drawable/ic__295533_toys_kids_children_car_transportation_icon"
             android:text="@string/vehiclesB"/>
 
@@ -101,7 +112,7 @@
             android:layout_height="wrap_content"
             android:text="@string/logout"
             android:textColor="@color/purple_500"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="6dp"
             android:fontFamily="@font/proxima_nova_font"
             android:drawableLeft="@drawable/ic_log_out_outline"
             android:drawableTint="@color/purple_500"

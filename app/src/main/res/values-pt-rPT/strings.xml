@@ -22,7 +22,6 @@
     <string name="modelo">Modelo</string>
     <string name="carPlate">Matricula</string>
     <string name="name">Nome</string>
-    <string name="qrCode">QR Code</string>
     <string name="quick_operations">Operações rápidas</string>
     <string name="choose_location">Escolher Local…</string>
     <string name="search">Pesquisar</string>
@@ -64,4 +63,10 @@
     <string name="day">Dia</string>
     <string name="hour">Hora</string>
     <string name="submit">Submeter</string>
+    <string name="futureReservations">Reservas agendadas</string>
+    <string name="naoExisteReservas">Não tem reservas agendadas</string>
+    <string name="addpayment">Adicionar Pagamento</string>
+    <string name="add_wallet">Por favor insira o numero do seu cartão</string>
+    <string name="Insert">Criar</string>
+    <string name="matriculaInserida">Matricula Inserida</string>
 </resources>

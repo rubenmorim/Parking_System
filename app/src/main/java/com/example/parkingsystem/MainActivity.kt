@@ -50,6 +50,9 @@ class MainActivity : AppCompatActivity() {
                     qrCodeFragment = QrCodeFragment(it[0].id)
                     homeFragment = HomeFragment(it[0].id)
                     profile = Profile(it[0])
+                    findViewById<ImageView>(R.id.imageViewLinearLayoutTitle).setImageResource(R.drawable.ic_house_solid)
+                    findViewById<TextView>(R.id.textViewLinearLayoutTitle).text = getString(R.string.home)
+                    setFragment(homeFragment, mapOf())
                 }
             }
         }
@@ -102,9 +105,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun redirectToUser(view: View) {
+        findViewById<ImageView>(R.id.imageViewLinearLayoutTitle).setImageResource(R.drawable.ic_user_solid)
         findViewById<TextView>(R.id.textViewLinearLayoutTitle).text = getString(R.string.profile)
         setFragment(profile, mapOf())
     }
+
+    fun redirectToGear(view: View) {}
 
 
 }
