@@ -13,11 +13,13 @@
         android:backgroundTint="@color/base"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="15dp"
-        app:cardCornerRadius="15dp">
+        app:cardCornerRadius="15dp"
+        android:id="@+id/buttonVehicle">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
 
             <ImageView
                 android:id="@+id/img"
@@ -48,12 +50,7 @@
                 android:text="23-MX-23"/>
 
 
-
-
         </RelativeLayout>
-
-
-
 
     </androidx.cardview.widget.CardView>
 

@@ -98,19 +98,6 @@
             app:tint="@color/cardview_dark_background">
 
         </ImageButton>
-        <ImageButton
-            android:id="@+id/buttonRedirectGear"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@drawable/ic_gear_solid"
-            android:adjustViewBounds="true"
-            android:backgroundTint="#00FFFFFF"
-            android:scaleType="centerInside"
-            android:layout_weight="1"
-            android:onClick="redirectToGear"
-            app:tint="@color/cardview_dark_background">
-
-        </ImageButton>
 
     </LinearLayout>
 

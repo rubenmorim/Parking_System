@@ -2,16 +2,14 @@ package com.example.parkingsystem.fragment
 
 import android.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.fragment.app.Fragment
 import com.example.parkingsystem.CaptureQRCodeActivity
 import com.example.parkingsystem.MainActivity
@@ -26,6 +24,9 @@ import com.google.zxing.qrcode.QRCodeWriter
 import com.journeyapps.barcodescanner.ScanContract
 import com.journeyapps.barcodescanner.ScanIntentResult
 import com.journeyapps.barcodescanner.ScanOptions
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody.Companion.toRequestBody
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -33,10 +34,13 @@ import retrofit2.Response
 
 class QrCodeFragment(idUser: Long) : Fragment() {
 
-    private lateinit var ivQRCode:      ImageView
-    private lateinit var parkFragment:  ParkFragment
-    private var idUtilizador:           Long =      idUser
-    private var globalLicencePlate:     String =    ""
+    private lateinit var ivQRCode:                      ImageView
+    private lateinit var buttonChangeCurrentVehicle:    Button
+    private var idUtilizador: Long =                    idUser
+    private var globalLicencePlate: String =            ""
+    private lateinit var parkFragment:                  ParkFragment
+    var m_Text: String =                                ""
+    var m_Text2: String =                               ""
 
 
     override fun onCreateView(
@@ -70,9 +74,23 @@ class QrCodeFragment(idUser: Long) : Fragment() {
         setQRCodeState(view, false, null)
         getMatriculaUtilizador(view, idUtilizador)
 
+        val button2: Button = view.findViewById(R.id.buttonAddVehicle)
+        button2.setOnClickListener{
+            showdialog(view)
+        }
+
+        val button3: Button = view.findViewById(R.id.buttonPayments)
+        button3.setOnClickListener{
+            //showdialogDel(v)
+        }
+
         return view
     }
 
+
+
+    // Get active user enrollment
+    //private fun getMatriculaUtilizador(idUtilizador: Long) {
     /**
      * Fetch all licence plates/vehicles associated with the user
      */
@@ -282,5 +300,63 @@ class QrCodeFragment(idUser: Long) : Fragment() {
                 ).show()
             }
         }
+    }
+
+    //Dialog Box to Add Vehicle
+    fun showdialog(view: View){
+        val builder: AlertDialog.Builder = AlertDialog.Builder(requireContext())
+        builder.setTitle("Add Vehicle")
+
+        val layout = LinearLayout(requireContext())
+        layout.orientation = LinearLayout.VERTICAL
+
+        val input = EditText(requireContext())
+        input.setHint("Car Name")
+        layout.addView(input)
+
+        val input2 = EditText(requireContext())
+        input2.setHint("License Plate")
+        layout.addView(input2)
+
+        builder.setView(layout)
+
+            // Set up the buttons
+            .setPositiveButton("Add", DialogInterface.OnClickListener() { dialog, which ->
+                // Here you get get input text from the Edittext
+                m_Text = input.text.toString()
+                m_Text2 = input2.text.toString()
+                addMatricula()
+            })
+        builder.setNegativeButton("Cancel", DialogInterface.OnClickListener { dialog, which -> dialog.cancel() })
+
+        builder.show()
+    }
+
+    //POST Request to Add Vehicle
+    private fun addMatricula(){
+
+        val jsonObject = JSONObject()
+        jsonObject.put("idUtilizador", idUtilizador)
+        jsonObject.put("nomeCarro", m_Text)
+        jsonObject.put("matricula", m_Text2)
+
+        val jsonObjectString = jsonObject.toString()
+
+        val requestBody = jsonObjectString.toRequestBody("application/json".toMediaTypeOrNull())
+
+        val request = ServiceBuilder.buildService(MatriculaEndpoint::class.java)
+        val call = request.addMatricula(requestBody)
+
+        call.enqueue(object : Callback<Matricula>{
+            override fun onResponse(call: Call<Matricula>, response: Response<Matricula>) {
+                val c: Matricula = response.body()!!
+                Toast.makeText(requireActivity(), c.idUtilizador.toString() + "-" + c.nomeCarro, Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onFailure(call: Call<Matricula>, t: Throwable) {
+                Toast.makeText(requireActivity(), "${t.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
+
     }
 }

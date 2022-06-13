@@ -72,4 +72,5 @@
     <string name="add_wallet">Please Insert Card Number</string>
     <string name="Insert">Create</string>
     <string name="matriculaInserida">Registration entered</string>
+    <string name="button">Button</string>
 </resources>
