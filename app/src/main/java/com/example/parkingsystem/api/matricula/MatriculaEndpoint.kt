@@ -1,5 +1,6 @@
 package com.example.parkingsystem.api.matricula
 import com.example.parkingsystem.model.Matricula
+import com.example.parkingsystem.model.Message
 import com.example.parkingsystem.model.Utilizador
 import com.example.parkingsystem.model.post.UtilizadorPost
 import okhttp3.RequestBody
@@ -17,12 +18,11 @@ interface MatriculaEndpoint {
     @GET("/api/matricula/updateMatriculaSelected?idUtilizador&matricula")
     fun updateMatricula(@Query("idUtilizador") idUtilizador: Long, @Query("matricula") matricula: String): Call<List<Matricula>>
 
-    @FormUrlEncoded
     @POST("/api/matricula/createMatricula/")
     fun addMatricula(
         @Body requestBody: RequestBody
     ): Call<Matricula>
 
     @DELETE("/api/matricula/apagarMatricula/{id}")
-    fun delMatricula(@Path("id") id: Long): Call<String>
+    fun delMatricula(@Path("id") id: String): Call<Message>
 }

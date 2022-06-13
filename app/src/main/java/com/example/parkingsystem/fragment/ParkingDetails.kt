@@ -19,7 +19,7 @@ class ParkingDetails : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_parking_details, container, false)
+        val v: View = inflater.inflate(R.layout.fragment_parking_details, container, false)
 
        /* val request = ServiceBuilder.buildService(EstacionamentoEndpoint::class.java)
         val call = request.getEstacionamentoByUser(utilizador.id)

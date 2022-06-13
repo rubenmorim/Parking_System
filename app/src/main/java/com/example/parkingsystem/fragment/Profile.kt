@@ -56,7 +56,7 @@ class Profile(user: User) : Fragment() {
         //Matriculas
         val button1: Button = v.findViewById(R.id.button4)
         button1.setOnClickListener{
-            historicoMatricula = HistoricoMatricula(utilizador.id)
+            historicoMatricula = HistoricoMatricula(utilizador)
             setFragment(historicoMatricula)
         }
 

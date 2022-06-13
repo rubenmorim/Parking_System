@@ -16,6 +16,7 @@ import com.example.parkingsystem.api.ServiceBuilder
 import com.example.parkingsystem.api.matricula.MatriculaEndpoint
 import com.example.parkingsystem.fragment.HistoricoMatricula
 import com.example.parkingsystem.model.Matricula
+import com.example.parkingsystem.model.Message
 import kotlinx.android.synthetic.main.recyclerline.view.*
 import kotlinx.android.synthetic.main.recyclerlinematricula.*
 import retrofit2.Call
@@ -71,17 +72,16 @@ class HistoricoMatriculaViewHolder(itemView : View): RecyclerView.ViewHolder(ite
                 .setPositiveButton("Yes", DialogInterface.OnClickListener() { dialog, which ->
                     // Here you get get input text from the Edittext
                     val request = ServiceBuilder.buildService(MatriculaEndpoint::class.java)
-                    val callDel = request.delMatricula(id)
+                    val callDel = request.delMatricula(id.toString())
 
-                    callDel.enqueue(object: Callback<String> {
-                        override fun onResponse(call: Call<String>, response: Response<String>) {
+                    callDel.enqueue(object: Callback<Message> {
+                        override fun onResponse(call: Call<Message>, response: Response<Message>) {
                             if (response.isSuccessful) {
-                                val c: String = response.body()!!
-                                Log.d("TAG", "Sucesso!" + c)
+                                Log.d("TAG", "Sucesso!")
                             }
                         }
 
-                        override fun onFailure(call: Call<String>, t: Throwable) {
+                        override fun onFailure(call: Call<Message>, t: Throwable) {
                             Log.d("TAG", "Fail onFailure!" + matricula.id + t.stackTrace)
                         }
                     })

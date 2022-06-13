@@ -20,7 +20,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class HistoricoMatricula(idUser: Long) : Fragment() {
+class HistoricoMatricula(user: User) : Fragment() {
 
     var m_Text: String =                                ""
     private var utilizador: User = user
@@ -45,7 +45,7 @@ class HistoricoMatricula(idUser: Long) : Fragment() {
         val v: View = inflater.inflate(R.layout.fragment_historico_matricula, container, false)
 
         val request = ServiceBuilder.buildService(MatriculaEndpoint::class.java)
-        val call = request.getMatriculaUtilizador(idUtilizador)
+        val call = request.getMatriculaUtilizador(utilizador.id)
         val recyclerView = v.findViewById<RecyclerView>(R.id.recyclerViewCarros)
 
         call.enqueue(object : Callback<List<Matricula>> {
