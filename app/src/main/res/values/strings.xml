@@ -75,4 +75,6 @@
     <string name="button">Button</string>
     <string name="insiraDia">Input day and time of the reservation</string>
     <string name="tempoReserva">Input how many time in minutes you want to reserve</string>
+    <string name="aa">Entry:</string>
+    <string name="bb">Out:</string>
 </resources>

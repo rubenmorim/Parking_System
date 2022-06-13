@@ -73,4 +73,6 @@
     <string name="button">Botão</string>
     <string name="insiraDia">Insira o dia e hora da reserva</string>
     <string name="tempoReserva">Digite quanto tempo em minutos quer reservar</string>
+    <string name="bb">Saida:</string>
+    <string name="aa">Entrada:</string>
 </resources>
