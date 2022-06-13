@@ -53,6 +53,24 @@
         <entry key="..\:/Users/migue/AndroidStudioProjects/Parking_System/app/src/main/res/layout/fragment_home.xml" value="0.3546875" />
         <entry key="..\:/Users/migue/AndroidStudioProjects/Parking_System/app/src/main/res/layout/fragment_qr_code.xml" value="0.3546875" />
         <entry key="..\:/Users/migue/AndroidStudioProjects/Parking_System/app/src/main/res/layout/recyclerline.xml" value="0.3546875" />
+        <entry key="..\:/Users/simao/Documents/ESTG/CM/Projeto/Parking_System/app/src/main/res/layout/activity_login.xml" value="0.17831813576494426" />
+        <entry key="..\:/Users/simao/Documents/ESTG/CM/Projeto/Parking_System/app/src/main/res/layout/activity_main.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/simao/Documents/ESTG/CM/Projeto/Parking_System/app/src/main/res/layout/fragment_add_matricula_view_model.xml" value="0.35260416666666666" />
+        <entry key="..\:/Users/simao/Documents/ESTG/CM/Projeto/Parking_System/app/src/main/res/layout/fragment_detalhes_historico.xml" value="0.18958333333333333" />
+        <entry key="..\:/Users/simao/Documents/ESTG/CM/Projeto/Parking_System/app/src/main/res/layout/fragment_first.xml" value="0.18958333333333333" />
+        <entry key="..\:/Users/simao/Documents/ESTG/CM/Projeto/Parking_System/app/src/main/res/layout/fragment_historico_matricula.xml" value="0.33" />
+        <entry key="..\:/Users/simao/Documents/ESTG/CM/Projeto/Parking_System/app/src/main/res/layout/fragment_home.xml" value="0.18958333333333333" />
+        <entry key="..\:/Users/simao/Documents/ESTG/CM/Projeto/Parking_System/app/src/main/res/layout/fragment_park.xml" value="0.17831813576494426" />
+        <entry key="..\:/Users/simao/Documents/ESTG/CM/Projeto/Parking_System/app/src/main/res/layout/fragment_parking_details.xml" value="0.1721014492753623" />
+        <entry key="..\:/Users/simao/Documents/ESTG/CM/Projeto/Parking_System/app/src/main/res/layout/fragment_profile.xml" value="0.2391304347826087" />
+        <entry key="..\:/Users/simao/Documents/ESTG/CM/Projeto/Parking_System/app/src/main/res/layout/fragment_qr_code.xml" value="0.1" />
+        <entry key="..\:/Users/simao/Documents/ESTG/CM/Projeto/Parking_System/app/src/main/res/layout/recyclerline.xml" value="0.20244565217391305" />
+        <entry key="..\:/Users/simao/Documents/ESTG/CM/Projeto/Parking_System/app/src/main/res/layout/recyclerlinematricula.xml" value="0.4393063583815029" />
+        <entry key="..\:/Users/simao/Documents/ESTG/CM/Projeto/Parking_System/app/src/main/res/layout/recyclerlineparque.xml" value="0.5" />
+        <entry key="..\:/Users/simao/Documents/ESTG/CM/Projeto/Parking_System/app/src/main/res/layout/row_layout.xml" value="0.1" />
+        <entry key="..\:/Users/migue/AndroidStudioProjects/Parking_System/app/src/main/res/layout/fragment_home.xml" value="0.3546875" />
+        <entry key="..\:/Users/migue/AndroidStudioProjects/Parking_System/app/src/main/res/layout/fragment_qr_code.xml" value="0.3546875" />
+        <entry key="..\:/Users/migue/AndroidStudioProjects/Parking_System/app/src/main/res/layout/recyclerline.xml" value="0.3546875" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.22735507246376813" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.1875" />
         <entry key="app/src/main/res/layout/fragment_park.xml" value="0.4211618257261411" />

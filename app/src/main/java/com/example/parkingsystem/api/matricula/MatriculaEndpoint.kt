@@ -19,5 +19,10 @@ interface MatriculaEndpoint {
 
     @FormUrlEncoded
     @POST("/api/matricula/createMatricula/")
-    fun getUserById(): Call<Matricula>
+    fun addMatricula(
+        @Body requestBody: RequestBody
+    ): Call<Matricula>
+
+    @DELETE("/api/matricula/apagarMatricula/{id}")
+    fun delMatricula(@Path("id") id: Long): Call<String>
 }

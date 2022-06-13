@@ -33,10 +33,13 @@ import retrofit2.Response
 
 class QrCodeFragment(idUser: Long) : Fragment() {
 
-    private lateinit var ivQRCode:      ImageView
-    private lateinit var parkFragment:  ParkFragment
-    private var idUtilizador:           Long =      idUser
-    private var globalLicencePlate:     String =    ""
+    private lateinit var ivQRCode:                      ImageView
+    private lateinit var buttonChangeCurrentVehicle:    Button
+    private var idUtilizador: Long =                    idUser
+    private var globalLicencePlate: String =            ""
+    private lateinit var parkFragment:                  ParkFragment
+    var m_Text: String =                                ""
+    var m_Text2: String =                               ""
 
 
     override fun onCreateView(
@@ -70,9 +73,23 @@ class QrCodeFragment(idUser: Long) : Fragment() {
         setQRCodeState(view, false, null)
         getMatriculaUtilizador(view, idUtilizador)
 
+        val button2: Button = view.findViewById(R.id.buttonAddVehicle)
+        button2.setOnClickListener{
+            showdialog(view)
+        }
+
+        val button3: Button = view.findViewById(R.id.buttonPayments)
+        button3.setOnClickListener{
+            //showdialogDel(v)
+        }
+
         return view
     }
 
+
+
+    // Get active user enrollment
+    //private fun getMatriculaUtilizador(idUtilizador: Long) {
     /**
      * Fetch all licence plates/vehicles associated with the user
      */
