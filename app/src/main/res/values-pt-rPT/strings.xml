@@ -70,4 +70,7 @@
     <string name="Insert">Criar</string>
     <string name="matriculaInserida">Matricula Inserida</string>
     <string name="parking_on_going">Parque a decorrer</string>
+    <string name="button">Botão</string>
+    <string name="insiraDia">Insira o dia e hora da reserva</string>
+    <string name="tempoReserva">Digite quanto tempo em minutos quer reservar</string>
 </resources>

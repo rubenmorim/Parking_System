@@ -60,7 +60,7 @@
     <string name="parking_on_going">On Going Parking</string>
     <string name="park_time" translatable="false">%1$s : %2$s</string>
     <string name="park_detail_error">There was an error fetching the park data</string>
-    <string name="profile" translatable="false">Profile</string>
+    <string name="profile">Profile</string>
     <string name="indique_o_tempo_pretendido">Set the desired time slot</string>
     <string name="scan_qr_code">Scan QR Code</string>
     <string name="day">Day</string>
@@ -73,4 +73,6 @@
     <string name="Insert">Create</string>
     <string name="matriculaInserida">Registration entered</string>
     <string name="button">Button</string>
+    <string name="insiraDia">Input day and time of the reservation</string>
+    <string name="tempoReserva">Input how many time in minutes you want to reserve</string>
 </resources>

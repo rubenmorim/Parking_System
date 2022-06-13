@@ -57,15 +57,16 @@ class ReserveFragment(idUser: Long, idParque: Int, titulo: String) : Fragment() 
         val submitButton = v.findViewById<Button>(R.id.btnSubmit)
         submitButton.setOnClickListener {
             val date = v.findViewById<DatePicker>(R.id.datePicker)
-            val time = v.findViewById<TimePicker>(R.id.timePicker1)
+            val hour = v.findViewById<TimePicker>(R.id.timePicker1)
             val day = date.year.toString() + "-" +
                     (date.month + 1).toString()  + "-" +
                     date.dayOfMonth.toString() + " " +
-                    time.hour.toString() + ":" +
-                    time.minute.toString()
+                    hour.hour.toString() + ":" +
+                    hour.minute.toString()
+            val time  = v.findViewById<EditText>(R.id.tempoReserva).text
 
             val request = ServiceBuilder.buildService(ReservaEndPoints::class.java)
-            val req = ReserveRequest( idUtilizador = idUtilizador, dataentrada = day, tempoParque = "60", idParque = idPark)
+            val req = ReserveRequest( idUtilizador = idUtilizador, dataentrada = day, tempoParque = time.toString(), idParque = idPark)
             val call = request.creatReserva(req)
 
             call.enqueue(object : Callback<Reserva> {
